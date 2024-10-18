@@ -22,6 +22,7 @@ services:
       - type: volume
         source: influxdb2-config
         target: /etc/influxdb2
+
   grafana:
     image: grafana/grafana-oss
     container_name: grafana
@@ -39,9 +40,20 @@ services:
       - "127.0.0.1:9001:9001" #default mqtt port for websockets
     volumes:
       - mosquitto-config:/etc/mosquitto:rw
-      - mosquitto-data:/var/lib/mosquitto/data:rw
+      - mosquitto-data:/var/lib/mosquitto:rw
       - mosquitto-log:/var/log/mosquitto:rw
     restart: unless-stopped
+
+  ruuvibridge:
+    image: ghcr.io/scrin/ruuvibridge
+    container_name: ruuvibridge
+    restart: unless-stopped
+    # http listener (8080) and Prometheus (8081)
+    ports:
+      - 127.0.0.1:8080:8080
+      - 127.0.0.1:8081:8081
+    volumes:
+      - ruuvibridge-config:/config.yml:ro
 
 secrets:
   influxdb2-admin-username:
@@ -50,10 +62,12 @@ secrets:
     file: ~/.config/influxdb2/admin-password
   influxdb2-admin-token:
     file: ~/.config/influxdb2/admin-token
+
 volumes:
   influxdb2-data:
   influxdb2-config:
-  grafana-storage: {}
+  grafana-storage:
   mosquitto-config:
   mosquitto-data:
   mosquitto-log:
+  ruuvibridge-config:
