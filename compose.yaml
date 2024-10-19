@@ -28,7 +28,7 @@ services:
     volumes:
       - grafana-storage:/var/lib/grafana:rw
 
-  mqtt5:
+  mosquitto:
     image: eclipse-mosquitto
     container_name: mosquitto
     ports:
@@ -62,6 +62,3 @@ volumes:
   influxdb2-data:
   influxdb2-config:
   grafana-storage:
-  #./mosquitto/etc:
-  #./mosquitto/mosquitto.conf:
-  #./ruuvibridge/config.yml:
