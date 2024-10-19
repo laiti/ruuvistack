@@ -67,6 +67,10 @@ services:
     networks:
       - mqtt
 
+networks:
+  mqtt:
+  influxdb:
+
 secrets:
   influxdb2-admin-username:
     file: ~/.config/influxdb2/admin-username
