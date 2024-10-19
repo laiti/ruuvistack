@@ -30,14 +30,13 @@ services:
 
   mqtt5:
     image: eclipse-mosquitto
-    container_name: mqtt5
+    container_name: mosquitto
     ports:
       - "127.0.0.1:1883:1883" #default mqtt port
-      #- "127.0.0.1:9001:9001" #default mqtt port for websockets
+      - "127.0.0.1:9001:9001" #default mqtt port for websockets
     volumes:
-      - mosquitto-config:/etc/mosquitto:rw
-      - mosquitto-data:/var/lib/mosquitto:rw
-      - mosquitto-log:/var/log/mosquitto:rw
+      - ./mosquitto/etc:/etc/mosquitto:rw
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
     restart: unless-stopped
 
   ruuvibridge:
@@ -63,7 +62,6 @@ volumes:
   influxdb2-data:
   influxdb2-config:
   grafana-storage:
-  mosquitto-config:
-  mosquitto-data:
-  mosquitto-log:
-  ./ruuvibridge/config.yml:
+  #./mosquitto/etc:
+  #./mosquitto/mosquitto.conf:
+  #./ruuvibridge/config.yml:
