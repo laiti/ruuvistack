@@ -49,7 +49,7 @@ services:
       - 127.0.0.1:8080:8080
       - 127.0.0.1:8081:8081
     volumes:
-      - ruuvibridge/config.yml:/config.yml:ro
+      - ./ruuvibridge/config.yml:/config.yml:ro
 
 secrets:
   influxdb2-admin-username:
@@ -66,4 +66,4 @@ volumes:
   mosquitto-config:
   mosquitto-data:
   mosquitto-log:
-  ruuvibridge/config.yml:
+  ./ruuvibridge/config.yml:
