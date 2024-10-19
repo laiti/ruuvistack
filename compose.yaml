@@ -34,6 +34,7 @@ services:
       - '127.0.0.1:3000:3000'
     networks:
       - influxdb
+      - grafana
     volumes:
       - grafana-storage:/var/lib/grafana:rw
 
@@ -68,9 +69,26 @@ services:
       - mqtt
       - influxdb
 
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/data:/data
+      - ./caddy/config:/config
+    networks:
+      - mqtt
+      - grafana
+
 networks:
   mqtt:
   influxdb:
+  grafana:
 
 secrets:
   influxdb2-admin-username:

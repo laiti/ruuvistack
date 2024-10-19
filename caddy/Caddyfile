@@ -1,0 +1,11 @@
+mqtt-ws.laiti.iki.fi {
+    reverse_proxy ws://mosquitto:9001
+}
+
+mqtt.laiti.iki.fi {
+    reverse_proxy http://mosquitto:1883
+}
+
+grafana.laiti.iki.fi {
+    reverse_proxy http://grafana:3000
+}
