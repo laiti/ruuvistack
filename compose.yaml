@@ -66,4 +66,4 @@ volumes:
   mosquitto-config:
   mosquitto-data:
   mosquitto-log:
-  ruuvibridge-config:
+  ruuvibridge/config.yml:
