@@ -16,12 +16,8 @@ services:
       - influxdb2-admin-password
       - influxdb2-admin-token
     volumes:
-      - type: volume
-        source: influxdb2-data
-        target: /var/lib/influxdb2
-      - type: volume
-        source: influxdb2-config
-        target: /etc/influxdb2
+      - influxdb2-data:/var/lib/influxdb2:rw
+      - influxdb2-config:/etc/influxdb2:ro
 
   grafana:
     image: grafana/grafana-oss
