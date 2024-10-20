@@ -58,7 +58,7 @@ distclean:
 	$(Q)rm -f mosquitto/config/certs/clients/*.crt mosquitto/config/certs/clients/*.key mosquitto/config/certs/clients/*.csr
 
 .PHONY: start
-start:	build $(CERTS) $(MOUNTED_VOLUMES_TOP)/config/mosquitto.conf $(CLIENT_CERTS) $(MOUNTED_VOLUMES_TOP)/passwd ## Starts the application
+start:	build $(CERTS) $(CLIENT_CERTS) $(MOUNTED_VOLUMES_TOP)/passwd ## Starts the application
 	$(Q)(docker-compose ps -q | wc -l | grep -q 0) || (echo "Already running" && docker-compose ps && /bin/false)
 	$(Q)nohup docker-compose up -d &
 	@echo "Application Started - VERSION $(GIT_VERSION)"
@@ -157,9 +157,6 @@ mosquitto/config/certs/broker/broker.crt: mosquitto/config/certs/broker/broker.c
 
 $(MOUNTED_VOLUMES_TOP)/passwd: $(MOUNTED_VOLUMES_TOP)/config
 	$(Q)([ ! -f $@ ] && touch $@) || /bin/true
-
-$(MOUNTED_VOLUMES_TOP)/config/mosquitto.conf: mosquitto.conf $(MOUNTED_VOLUMES_TOP)/config
-	/bin/true
 
 $(MOUNTED_VOLUMES_TOP)/config/mosquitto/config/certs/ca.crt: mosquitto/config/certs/ca/ca.crt $(MOUNTED_VOLUMES_TOP)config/certs
 	$(Q)([ ! -f $@ ] && cp $< $@) || /bin/true
