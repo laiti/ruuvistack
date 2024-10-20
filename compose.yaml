@@ -54,8 +54,8 @@ services:
       #- "127.0.0.1:9001:9001" #default mqtt port for websockets
       - "127.0.0.1:8883:8883"
     volumes:
-      - ./mosquitto:/etc/mosquitto:rw
-      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/passwd:/mosquitto/passwd:rw
+      - ./mosquitto/config:/mosquitto/config:rw
     restart: unless-stopped
 
   ruuvibridge:
@@ -98,6 +98,7 @@ networks:
   mqtt:
   influxdb:
   grafana:
+  bridge:
 
 secrets:
   influxdb2-admin-username:
