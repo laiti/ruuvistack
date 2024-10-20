@@ -1,11 +1,9 @@
-mqtt-ws.laiti.iki.fi {
-    reverse_proxy ws://mosquitto:9001
-}
-
-mqtt.laiti.iki.fi {
-    reverse_proxy http://mosquitto:1883
-}
-
 grafana.laiti.iki.fi {
-    reverse_proxy http://grafana:3000
+    reverse_proxy http://grafana:3000 {
+         header_up Host {host}
+         header_up X-Real-IP {remote}
+         header_up X-Forwarded-For {remote}
+         header_up X-Forwarded-Port {server_port}
+         header_up X-Forwarded-Proto {scheme}
+    }
 }
