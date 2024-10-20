@@ -41,7 +41,7 @@ services:
       - grafana-storage:/var/lib/grafana:rw
 
   mosquitto:
-    image: eclipse-mosquitto
+    image: eclipse-mosquitto:2.0-openssl
     container_name: mosquitto
     expose:
       - 1883
@@ -50,8 +50,9 @@ services:
         aliases:
           - mosquitto
     ports:
-      - "127.0.0.1:1883:1883" #default mqtt port
-      - "127.0.0.1:9001:9001" #default mqtt port for websockets
+      #- "127.0.0.1:1883:1883" #default mqtt port
+      #- "127.0.0.1:9001:9001" #default mqtt port for websockets
+      - "127.0.0.1:8883:8883"
     volumes:
       - ./mosquitto:/etc/mosquitto:rw
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
