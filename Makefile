@@ -28,7 +28,7 @@ CERTS:=\
 	$(MOUNTED_VOLUMES_TOP)/config/certs/broker/broker.key \
 	$(MOUNTED_VOLUMES_TOP)/config/certs/broker/broker.crt
 CLIENT_CERTS:=\
-	certs/clients/ruuvigw.crt
+	$(MOUNTED_VOLUMES_TOP)/config/certs/clients/ruuvigw.crt
 
 # ==================================================================
 # Targets:
