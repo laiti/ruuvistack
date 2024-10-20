@@ -50,9 +50,8 @@ services:
         aliases:
           - mosquitto
     ports:
-      #- "127.0.0.1:1883:1883" #default mqtt port
-      #- "127.0.0.1:9001:9001" #default mqtt port for websockets
-      - "8883:8883"
+      - "127.0.0.1:1883:1883" #default mqtt port
+      - "8886:8886"           # open to world for Ruuvi Gateway
     volumes:
       - ./mosquitto/passwd:/mosquitto/passwd:rw
       - ./mosquitto/config:/mosquitto/config:rw
