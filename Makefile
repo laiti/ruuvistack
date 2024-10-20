@@ -28,7 +28,7 @@ CERTS:=\
 	$(MOUNTED_VOLUMES_TOP)/config/certs/broker/broker.key \
 	$(MOUNTED_VOLUMES_TOP)/config/certs/broker/broker.crt
 CLIENT_CERTS:=\
-	certs/clients/example_user.crt
+	certs/clients/ruuvigw.crt
 
 # ==================================================================
 # Targets:
@@ -150,7 +150,7 @@ mosquitto/config/certs/broker/broker.crt: mosquitto/config/certs/broker/broker.c
 	openssl genrsa -out $*.key $(Q_STDERR) ; \
 	openssl req -new -key $*.key -out $*.csr -subj "$(SUBJECT_CLIENT)" || openssl req -in $*.csr -noout -text $(Q_STDERR) ; \
 	openssl x509 -req -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -in $*.csr -out $*.crt $(Q_STDERR) || openssl x509 -in $*.crt -text -noout $(Q_STDERR) ; \
-	docker run -it --rm -v $(shell pwd)/$(MOUNTED_VOLUMES_TOP)/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b /mosquitto/config/passwords.txt $${mqtt_user} $${mqtt_password} $(Q_STDERR)
+	docker run -it --rm -v $(shell pwd)/$(MOUNTED_VOLUMES_TOP)/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b /mosquitto/passwd $${mqtt_user} $${mqtt_password} $(Q_STDERR)
 
 # ==================================================================
 # Miscellaneous rules
