@@ -24,9 +24,9 @@ endif
 
 MOUNTED_VOLUMES_TOP:=mosquitto
 CERTS:=\
-	$(MOUNTED_VOLUMES_TOP)/config/certs/ca.crt \
-	$(MOUNTED_VOLUMES_TOP)/config/certs/broker.key \
-	$(MOUNTED_VOLUMES_TOP)/config/certs/broker.crt
+	$(MOUNTED_VOLUMES_TOP)/config/certs/ca/ca.crt \
+	$(MOUNTED_VOLUMES_TOP)/config/certs/broker/broker.key \
+	$(MOUNTED_VOLUMES_TOP)/config/certs/broker/broker.crt
 CLIENT_CERTS:=\
 	certs/clients/example_user.crt
 
