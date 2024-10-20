@@ -52,7 +52,7 @@ services:
     ports:
       #- "127.0.0.1:1883:1883" #default mqtt port
       #- "127.0.0.1:9001:9001" #default mqtt port for websockets
-      - "127.0.0.1:8883:8883"
+      - "8883:8883"
     volumes:
       - ./mosquitto/passwd:/mosquitto/passwd:rw
       - ./mosquitto/config:/mosquitto/config:rw
