@@ -53,9 +53,9 @@ clean:
 .PHONY: distclean ## Cleans up EVERYTHING
 distclean:
 	$(Q)rm -f *~
-	$(Q)rm -f certs/ca/*.crt certs/ca/*.key certs/ca/*.srl
-	$(Q)rm -f certs/broker/*.crt certs/broker/*.key certs/broker/*.csr
-	$(Q)rm -f certs/clients/*.crt certs/clients/*.key certs/clients/*.csr
+	$(Q)rm -f mosquitto/config/certs/ca/*.crt mosquitto/config/certs/ca/*.key mosquitto/config/certs/ca/*.srl
+	$(Q)rm -f mosquitto/config/certs/broker/*.crt mosquitto/config/certs/broker/*.key mosquitto/config/certs/broker/*.csr
+	$(Q)rm -f mosquitto/config/certs/clients/*.crt mosquitto/config/certs/clients/*.key mosquitto/config/certs/clients/*.csr
 
 .PHONY: start
 start:	build $(CERTS) $(MOUNTED_VOLUMES_TOP)/config/mosquitto.conf $(CLIENT_CERTS) $(MOUNTED_VOLUMES_TOP)/passwd ## Starts the application
@@ -109,21 +109,21 @@ SUBJECT_CLIENT:=/C=SE/ST=Pirkanmaa/L=Tampere/O=$(ORGANIZATION_NAME)/OU=Client/CN
 
 # Note: if you want a password protected key, then add the '-des3'
 # command line option to the 'openssl genrsa' command below.
-certs/ca/ca.key: ## Create Root Key
+mosquitto/config/certs/ca/ca.key: ## Create Root Key
 	$(Q)openssl genrsa -out $@ 4096 $(Q_STDERR)
 
 # CERTIFICATE
 
 # Here we used our root key to create the root certificate that needs
 # to be distributed in all the computers that have to trust us.
-certs/ca/ca.crt: certs/ca/ca.key ## Create and self sign the Root Certificate
+mosquitto/config/certs/ca/ca.crt: mosquitto/config/certs/ca/ca.key ## Create and self sign the Root Certificate
 	$(Q)openssl req -x509 -new -nodes -key $< -sha256 -days 1024 -out $@ -subj "$(SUBJECT_ROOT_CA)" $(Q_STDERR)
 
 # =========================
 # MQTT BROKER
 
 # KEY
-certs/broker/broker.key: ## Create the server certificate key
+mosquitto/config/certs/broker/broker.key: ## Create the server certificate key
 	$(Q)openssl genrsa -out $@ 2048 $(Q_STDERR)
 
 # CERTIFICATE SIGNING REQUEST (CSR)
@@ -132,24 +132,24 @@ certs/broker/broker.key: ## Create the server certificate key
 # the certificate you want to generate.  This request will be
 # processed by the owner of the Root key (you in this case since you
 # created it earlier) to generate the certificate.
-certs/broker/broker.csr: certs/broker/broker.key ## Create the server certificate signing request (csr)
+mosquitto/config/certs/broker/broker.csr: mosquitto/config/certs/broker/broker.key ## Create the server certificate signing request (csr)
 	$(Q)openssl req -new -key $< -out $@ -subj "$(SUBJECT_SERVER)" $(Q_STDERR) || openssl req -in $@ -noout -text $(Q_STDERR)
 
 # CERTIFICATE
 
-certs/broker/broker.crt: certs/broker/broker.csr certs/ca/ca.crt certs/ca/ca.key ## Generate the certificate using the `server` csr and key along with the CA Root key
-	$(Q)openssl x509 -req -in certs/broker/broker.csr -CA certs/ca/ca.crt -CAkey certs/ca/ca.key -CAcreateserial -out $@ -days 500 -sha256 $(Q_STDERR) || openssl x509 -in $@ -text -noout $(Q_STDERR)
+mosquitto/config/certs/broker/broker.crt: mosquitto/config/certs/broker/broker.csr mosquitto/config/certs/ca/ca.crt mosquitto/config/certs/ca/ca.key ## Generate the certificate using the `server` csr and key along with the CA Root key
+	$(Q)openssl x509 -req -in mosquitto/config/certs/broker/broker.csr -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -out $@ -days 500 -sha256 $(Q_STDERR) || openssl x509 -in $@ -text -noout $(Q_STDERR)
 
 # =========================
 # MQTT CLIENTS
 
 # generic rule to generate the client certificate from a text file.
-%.key %.csr %.crt: %.client certs/ca/ca.crt certs/ca/ca.key $(MOUNTED_VOLUMES_TOP)/passwd
+%.key %.csr %.crt: %.client mosquitto/config/certs/ca/ca.crt mosquitto/config/certs/ca/ca.key $(MOUNTED_VOLUMES_TOP)/passwd
 	$(Q)IFS=';' read -r summary mqtt_user mqtt_password < $< ; \
 	echo "Creating Client: $*" ; \
 	openssl genrsa -out $*.key $(Q_STDERR) ; \
 	openssl req -new -key $*.key -out $*.csr -subj "$(SUBJECT_CLIENT)" || openssl req -in $*.csr -noout -text $(Q_STDERR) ; \
-	openssl x509 -req -CA certs/ca/ca.crt -CAkey certs/ca/ca.key -CAcreateserial -in $*.csr -out $*.crt $(Q_STDERR) || openssl x509 -in $*.crt -text -noout $(Q_STDERR) ; \
+	openssl x509 -req -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -in $*.csr -out $*.crt $(Q_STDERR) || openssl x509 -in $*.crt -text -noout $(Q_STDERR) ; \
 	docker run -it --rm -v $(shell pwd)/$(MOUNTED_VOLUMES_TOP)/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b /mosquitto/config/passwords.txt $${mqtt_user} $${mqtt_password} $(Q_STDERR)
 
 # ==================================================================
@@ -161,13 +161,13 @@ $(MOUNTED_VOLUMES_TOP)/passwd: $(MOUNTED_VOLUMES_TOP)/config
 $(MOUNTED_VOLUMES_TOP)/config/mosquitto.conf: mosquitto.conf $(MOUNTED_VOLUMES_TOP)/config
 	$(Q)([ ! -f $@ ] && cp $< $@) || /bin/true
 
-$(MOUNTED_VOLUMES_TOP)/config/certs/ca.crt: certs/ca/ca.crt $(MOUNTED_VOLUMES_TOP)config/certs
+$(MOUNTED_VOLUMES_TOP)/config/mosquitto/config/certs/ca.crt: mosquitto/config/certs/ca/ca.crt $(MOUNTED_VOLUMES_TOP)config/certs
 	$(Q)([ ! -f $@ ] && cp $< $@) || /bin/true
 
-$(MOUNTED_VOLUMES_TOP)/config/certs/broker.key: certs/broker/broker.key $(MOUNTED_VOLUMES_TOP)/config/certs
+$(MOUNTED_VOLUMES_TOP)/config/mosquitto/config/certs/broker.key: mosquitto/config/certs/broker/broker.key $(MOUNTED_VOLUMES_TOP)/config/certs
 	$(Q)([ ! -f $@ ] && cp $< $@) || /bin/true
 
-$(MOUNTED_VOLUMES_TOP)/config/certs/broker.crt: certs/broker/broker.crt $(MOUNTED_VOLUMES_TOP)/config/certs
+$(MOUNTED_VOLUMES_TOP)/config/mosquitto/config/certs/broker.crt: mosquitto/config/certs/broker/broker.crt $(MOUNTED_VOLUMES_TOP)/config/certs
 	$(Q)([ ! -f $@ ] && cp $< $@) || /bin/true
 
 $(MOUNTED_VOLUMES_TOP)/config:
