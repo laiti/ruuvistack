@@ -98,9 +98,9 @@ help:           ## Show this help
 IP:=mqtt.laiti.iki.fi
 ORGANIZATION_NAME:=Laiti Inc.
 # NOTE: the Common Name (CN) for the CA must be different than that of the broker and the client
-SUBJECT_ROOT_CA:=/C=SE/ST=Pirkanmaa/L=Tampere/O=$(ORGANIZATION_NAME)/OU=CA/CN=$(ORGANIZATION_NAME)
-SUBJECT_SERVER:=/C=SE/ST=Pirkanmaa/L=Tampere/O=$(ORGANIZATION_NAME)/OU=Server/CN=$(IP)
-SUBJECT_CLIENT:=/C=SE/ST=Pirkanmaa/L=Tampere/O=$(ORGANIZATION_NAME)/OU=Client/CN=$(IP)
+SUBJECT_ROOT_CA:=/C=FI/ST=Pirkanmaa/L=Tampere/O=$(ORGANIZATION_NAME)/OU=CA/CN=$(ORGANIZATION_NAME)
+SUBJECT_SERVER:=/C=FI/ST=Pirkanmaa/L=Tampere/O=$(ORGANIZATION_NAME)/OU=Server/CN=$(IP)
+SUBJECT_CLIENT:=/C=FI/ST=Pirkanmaa/L=Tampere/O=$(ORGANIZATION_NAME)/OU=Client/CN=$(IP)
 
 # =========================
 # CERTIFICATE AUTHROITY
