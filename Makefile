@@ -159,7 +159,7 @@ $(MOUNTED_VOLUMES_TOP)/passwd: $(MOUNTED_VOLUMES_TOP)/config
 	$(Q)([ ! -f $@ ] && touch $@) || /bin/true
 
 $(MOUNTED_VOLUMES_TOP)/config/mosquitto.conf: mosquitto.conf $(MOUNTED_VOLUMES_TOP)/config
-	$(Q)([ ! -f $@ ] && cp $< $@) || /bin/true
+	/bin/true
 
 $(MOUNTED_VOLUMES_TOP)/config/mosquitto/config/certs/ca.crt: mosquitto/config/certs/ca/ca.crt $(MOUNTED_VOLUMES_TOP)config/certs
 	$(Q)([ ! -f $@ ] && cp $< $@) || /bin/true
