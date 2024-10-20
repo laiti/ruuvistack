@@ -117,7 +117,7 @@ mosquitto/config/certs/ca/ca.key: ## Create Root Key
 # Here we used our root key to create the root certificate that needs
 # to be distributed in all the computers that have to trust us.
 mosquitto/config/certs/ca/ca.crt: mosquitto/config/certs/ca/ca.key ## Create and self sign the Root Certificate
-	$(Q)openssl req -x509 -new -nodes -key $< -sha256 -days 1024 -out $@ -subj "$(SUBJECT_ROOT_CA)" $(Q_STDERR)
+	$(Q)openssl req -x509 -new -nodes -key $< -sha256 -days 1850 -out $@ -subj "$(SUBJECT_ROOT_CA)" $(Q_STDERR)
 
 # =========================
 # MQTT BROKER
@@ -138,7 +138,7 @@ mosquitto/config/certs/broker/broker.csr: mosquitto/config/certs/broker/broker.k
 # CERTIFICATE
 
 mosquitto/config/certs/broker/broker.crt: mosquitto/config/certs/broker/broker.csr mosquitto/config/certs/ca/ca.crt mosquitto/config/certs/ca/ca.key ## Generate the certificate using the `server` csr and key along with the CA Root key
-	$(Q)openssl x509 -req -in mosquitto/config/certs/broker/broker.csr -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -out $@ -days 500 -sha256 $(Q_STDERR) || openssl x509 -in $@ -text -noout $(Q_STDERR)
+	$(Q)openssl x509 -req -in mosquitto/config/certs/broker/broker.csr -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -out $@ -days 1850 -sha256 $(Q_STDERR) || openssl x509 -in $@ -text -noout $(Q_STDERR)
 
 # =========================
 # MQTT CLIENTS
