@@ -40,7 +40,7 @@ all: build ## Default rule: compile the main application
 .PHONY: host-setup
 host-setup: ## Setup your build environment
 	@echo "make host-setup rule"
-	$(Q)git submodule update --init --recursive
+	$(Q)true
 
 .PHONY: build
 build:	host-setup ## Builds the application
