@@ -3,6 +3,7 @@ version: "3.7"
 services:
   influxdb2:
     image: influxdb:2
+    container_name: influxdb2
     expose:
     - 8086
     networks:
