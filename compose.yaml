@@ -75,8 +75,8 @@ services:
       - "443:443/udp" # HTTP/3 is UDP
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
-      - ./caddy/data:/data
-      - ./caddy/config:/config
+      - ./caddy/data:/data/caddy
+      - ./caddy/config:/config/caddy
     networks:
       - mqtt
       - grafana
