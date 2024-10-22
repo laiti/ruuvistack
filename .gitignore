@@ -1,1 +1,5 @@
 ruuvibridge/config.yml
+mosquitto/passwd
+mosquitto/config/certs/clients/*
+mosquitto/config/certs/ca/*
+mosquitto/config/certs/broker/*
