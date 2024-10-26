@@ -88,11 +88,11 @@ networks:
 
 secrets:
   influxdb2-admin-username:
-    file: ~/.config/influxdb2/admin-username
+    file: ~/.config/influxdb2/username
   influxdb2-admin-password:
-    file: ~/.config/influxdb2/admin-password
+    file: ~/.config/influxdb2/password
   influxdb2-admin-token:
-    file: ~/.config/influxdb2/admin-token
+    file: ~/.config/influxdb2/token
 
 volumes:
   influxdb2-data:
