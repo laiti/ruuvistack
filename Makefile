@@ -74,7 +74,7 @@ mosquitto/config/certs/broker/broker.csr: mosquitto/config/certs/broker/broker.k
 
 # CERTIFICATE
 mosquitto/config/certs/broker/broker.crt: mosquitto/config/certs/broker/broker.csr mosquitto/config/certs/ca/ca.crt mosquitto/config/certs/ca/ca.key ## Generate the certificate using the `server` csr and key along with the CA Root key
-	openssl x509 -req -in mosquitto/config/certs/broker/broker.csr -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -out $@ -days 1850 -sha256 $(Q_STDERR) || openssl x509 -in $@ -text -noout $(Q_STDERR)
+	openssl x509 -req -in mosquitto/config/certs/broker/broker.csr -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -out $@ -days 1850 -sha256 || openssl x509 -in $@ -text -noout
 
 # =========================
 # MQTT CLIENTS
@@ -85,7 +85,7 @@ mosquitto/config/certs/broker/broker.crt: mosquitto/config/certs/broker/broker.c
 	echo "Creating Client: $*" ; \
 	openssl genrsa -out $*.key ; \
 	openssl req -new -key $*.key -out $*.csr -subj "$(SUBJECT_CLIENT)" || openssl req -in $*.csr -noout -text ; \
-	openssl x509 -req -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -in $*.csr -out $*.crt || openssl x509 -in $*.crt -text -noout $(Q_STDERR) ;
+	openssl x509 -req -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -in $*.csr -out $*.crt || openssl x509 -in $*.crt -text -noout ;
 
 # ==================================================================
 # Miscellaneous rules
