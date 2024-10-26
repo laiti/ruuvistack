@@ -30,3 +30,7 @@ from(bucket: "ruuvi")
     |> yield(name: "_time")
 ```
 
+
+### Sources
+
+https://github.com/mchestr/Secure-MQTT-Docker
