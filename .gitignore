@@ -1,1 +1,6 @@
 mosquitto/passwd
+.bash_history
+.vim
+.viminfo
+.lesshst
+.local/share/nano
