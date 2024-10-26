@@ -6,7 +6,7 @@ CERTS:=\
 	$(MOUNTED_VOLUMES_TOP)/config/certs/broker/broker.key \
 	$(MOUNTED_VOLUMES_TOP)/config/certs/broker/broker.crt
 CLIENT_CERTS:=\
-	$(MOUNTED_VOLUMES_TOP)/config/certs/clients/ruuvigw.crt
+	$(MOUNTED_VOLUMES_TOP)/config/certs/clients/ruuvigw
 
 .PHONY: certs
 certs: $(CERTS) $(CLIENT_CERTS)
@@ -80,24 +80,8 @@ mosquitto/config/certs/broker/broker.crt: mosquitto/config/certs/broker/broker.c
 # MQTT CLIENTS
 
 # generic rule to generate the client certificate from a text file.
-%.key %.csr %.crt: %.client mosquitto/config/certs/ca/ca.crt mosquitto/config/certs/ca/ca.key $(MOUNTED_VOLUMES_TOP)/passwd
-	IFS=';' read -r summary mqtt_user mqtt_password < $< ; \
-	echo "Creating Client: $*" ; \
-	openssl genrsa -out $*.key ; \
-	openssl req -new -key $*.key -out $*.csr -subj "$(SUBJECT_CLIENT)" || openssl req -in $*.csr -noout -text ; \
-	openssl x509 -req -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -in $*.csr -out $*.crt || openssl x509 -in $*.crt -text -noout ;
-
-# ==================================================================
-# Miscellaneous rules
-
-$(MOUNTED_VOLUMES_TOP)/passwd: $(MOUNTED_VOLUMES_TOP)/config
-	([ ! -f $@ ] && touch $@) || /bin/true
-
-$(MOUNTED_VOLUMES_TOP)/config/mosquitto/config/certs/ca.crt: mosquitto/config/certs/ca/ca.crt $(MOUNTED_VOLUMES_TOP)config/certs
-	([ ! -f $@ ] && cp $< $@) || /bin/true
-
-$(MOUNTED_VOLUMES_TOP)/config/mosquitto/config/certs/broker.key: mosquitto/config/certs/broker/broker.key $(MOUNTED_VOLUMES_TOP)/config/certs
-	([ ! -f $@ ] && cp $< $@) || /bin/true
-
-$(MOUNTED_VOLUMES_TOP)/config/mosquitto/config/certs/broker.crt: mosquitto/config/certs/broker/broker.crt $(MOUNTED_VOLUMES_TOP)/config/certs
-	([ ! -f $@ ] && cp $< $@) || /bin/true
+mosquitto/config/certs/clients/ruuvigw:
+	echo "Creating Client: $@" ; \
+	openssl genrsa -out $@.key ; \
+	openssl req -new -key $@.key -out $@.csr -subj "$(SUBJECT_CLIENT)" || openssl req -in $@.csr -noout -text ; \
+	openssl x509 -req -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -in $@.csr -out $@.crt || openssl x509 -in $@.crt -text -noout
