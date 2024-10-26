@@ -34,3 +34,8 @@ from(bucket: "ruuvi")
 ### Sources
 
 https://github.com/mchestr/Secure-MQTT-Docker
+https://cedalo.com/blog/mqtt-tls-configuration-guide/
+https://docs.influxdata.com/influxdb/v2/install/use-docker-compose/
+https://medium.com/@tomer.klein/docker-compose-and-mosquitto-mqtt-simplifying-broker-deployment-7aaf469c07ee
+https://github.com/sukesh-ak/setup-mosquitto-with-docker/tree/main
+https://github.com/Scrin/RuuviBridge
