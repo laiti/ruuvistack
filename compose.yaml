@@ -4,6 +4,7 @@ services:
   influxdb2:
     image: influxdb:2
     container_name: influxdb2
+    user: 1338:1338
     expose:
     - 8086
     networks:
