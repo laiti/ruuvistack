@@ -42,6 +42,9 @@ services:
       influxdb:
     volumes:
       - grafana-storage:/var/lib/grafana:rw
+    environment:
+      GF_SERVER_DOMAIN: grafana.laiti.iki.fi
+      GF_SERVER_ROOT_URL: https://grafana.laiti.iki.fi/
 
   mosquitto:
     image: eclipse-mosquitto:2.0-openssl
