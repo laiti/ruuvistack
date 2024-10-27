@@ -4,6 +4,7 @@ services:
   influxdb2:
     image: influxdb:2
     container_name: influxdb2
+    # InfluxDB runs by default with UID 1000, it is my user and I don't want that
     user: 1338:1338
     expose:
     - 8086
@@ -29,6 +30,8 @@ services:
   grafana:
     image: grafana/grafana-oss
     container_name: grafana
+    # Grafana runs as UID 472 by default
+    user: 472:472
     restart: unless-stopped
     expose:
       - 3000
@@ -43,6 +46,8 @@ services:
   mosquitto:
     image: eclipse-mosquitto:2.0-openssl
     container_name: mosquitto
+    # Mosquitto runs as UID 1883 by default
+    user: 1883:1883
     expose:
       - 1883 # MQTT no-tls port for RuuviBridge
     networks:
@@ -59,6 +64,8 @@ services:
   ruuvibridge:
     image: ghcr.io/scrin/ruuvibridge
     container_name: ruuvibridge
+    # Ruuvibridge runs as UID 1337 by default
+    user: 1337:1337
     restart: unless-stopped
     volumes:
       - ./ruuvibridge/config.yml:/config.yml:ro
@@ -69,6 +76,8 @@ services:
   caddy:
     image: caddy:latest
     container_name: caddy
+    # Caddy runs as UID 0 by default, most likely because it needs to listen ports below 1024
+    # user: 0
     restart: unless-stopped
     ports:
       - "80:80"
