@@ -26,6 +26,8 @@ services:
     volumes:
       - influxdb2-data:/var/lib/influxdb2:rw
       - influxdb2-config:/etc/influxdb2:rw
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
 
   grafana:
     image: grafana/grafana-oss
@@ -42,6 +44,8 @@ services:
       influxdb:
     volumes:
       - grafana-storage:/var/lib/grafana:rw
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     environment:
       GF_SERVER_DOMAIN: grafana.laiti.iki.fi
       GF_SERVER_ROOT_URL: https://grafana.laiti.iki.fi/
@@ -62,6 +66,8 @@ services:
     volumes:
       - ./mosquitto/passwd:/mosquitto/passwd:rw
       - ./mosquitto/config:/mosquitto/config:rw
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     restart: unless-stopped
 
   ruuvibridge:
@@ -90,6 +96,8 @@ services:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
       - ./caddy/data:/data/caddy
       - ./caddy/config:/config/caddy
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     networks:
       - mqtt
       - grafana
