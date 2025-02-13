@@ -80,6 +80,12 @@ from(bucket: "ruuvi")
 
 TODO
 
+### Ruuvibridge
+
+Ruuvibridge is configured with just `ruuvibridge/config.yml`. The same directory contains a sample config. This setup uses the recommended **MQTT listener** mode.
+
+Change the `username` and `password` under `mqtt_listener` to the one you created in mosquitto. and configure your Ruuvitag BT addressess under `tag_names` and you should be good to go.
+
 ## Sources
 
 - https://github.com/mchestr/Secure-MQTT-Docker
