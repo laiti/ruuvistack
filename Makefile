@@ -1,6 +1,4 @@
-SHELL := /bin/bash
-
-MOUNTED_VOLUMES_TOP:=mosquitto
+CERT_DIR:=mosquitto/config/certs
 CERTS:=\
 	$(MOUNTED_VOLUMES_TOP)/config/certs/ca/ca.crt \
 	$(MOUNTED_VOLUMES_TOP)/config/certs/broker/broker.key \
@@ -8,10 +6,12 @@ CERTS:=\
 CLIENT_CERTS:=\
 	$(MOUNTED_VOLUMES_TOP)/config/certs/clients/ruuvigw
 
+include $(PWD)/.env
+
 .PHONY: certs
 certs: $(CERTS) $(CLIENT_CERTS)
 
-.PHONY: distclean ## Cleans up EVERYTHING
+.PHONY: distclean # This cleans everything
 distclean:
 	rm -f *~
 	rm -f mosquitto/config/certs/ca/*.crt mosquitto/config/certs/ca/*.key mosquitto/config/certs/ca/*.srl
@@ -32,11 +32,11 @@ distclean:
 # variables
 
 # Materials that go in the subject
-IP:=mqtt.laiti.iki.fi
+IP:=$(MOSQUITTO_HOSTNAME)
 ORGANIZATION_NAME:=Laiti Inc.
 # NOTE: the Common Name (CN) for the CA must be different than that of the broker and the client
-SUBJECT_ROOT_CA:=/C=FI/ST=Pirkanmaa/L=Tampere/O=$(ORGANIZATION_NAME)/OU=CA/CN=$(ORGANIZATION_NAME)
-SUBJECT_SERVER:=/C=FI/ST=Pirkanmaa/L=Tampere/O=$(ORGANIZATION_NAME)/OU=Server/CN=$(IP)
+SUBJECT_ROOT_CA:=$(MOSQUITTO_ROOT_CA_SUBJECT)
+SUBJECT_SERVER:=$(MOSQUITTO_SERVER_SUBJECT)
 SUBJECT_CLIENT:=/C=FI/ST=Pirkanmaa/L=Tampere/O=$(ORGANIZATION_NAME)/OU=Client/CN=$(IP)
 
 # =========================
@@ -54,7 +54,7 @@ mosquitto/config/certs/ca/ca.key: ## Create Root Key
 # Here we used our root key to create the root certificate that needs
 # to be distributed in all the computers that have to trust us.
 mosquitto/config/certs/ca/ca.crt: mosquitto/config/certs/ca/ca.key ## Create and self sign the Root Certificate
-	openssl req -x509 -new -nodes -key $< -sha256 -days 1850 -out $@ -subj "$(SUBJECT_ROOT_CA)"
+	openssl req -x509 -new -nodes -key $< -sha256 -days 1850 -out $@ -subj "$(MOSQUITTO_ROOT_CA_SUBJECT)"
 
 # =========================
 # MQTT BROKER
@@ -70,7 +70,7 @@ mosquitto/config/certs/broker/broker.key: ## Create the server certificate key
 # processed by the owner of the Root key (you in this case since you
 # created it earlier) to generate the certificate.
 mosquitto/config/certs/broker/broker.csr: mosquitto/config/certs/broker/broker.key ## Create the server certificate signing request (csr)
-	openssl req -new -key $< -out $@ -subj "$(SUBJECT_SERVER)" || openssl req -in $@ -noout -text
+	openssl req -new -key $< -out $@ -subj "$(MOSQUITTO_SERVER_SUBJECT)" || openssl req -in $@ -noout -text
 
 # CERTIFICATE
 mosquitto/config/certs/broker/broker.crt: mosquitto/config/certs/broker/broker.csr mosquitto/config/certs/ca/ca.crt mosquitto/config/certs/ca/ca.key ## Generate the certificate using the `server` csr and key along with the CA Root key
@@ -83,5 +83,5 @@ mosquitto/config/certs/broker/broker.crt: mosquitto/config/certs/broker/broker.c
 mosquitto/config/certs/clients/ruuvigw:
 	echo "Creating Client: $@" ; \
 	openssl genrsa -out $@.key ; \
-	openssl req -new -key $@.key -out $@.csr -subj "$(SUBJECT_CLIENT)" || openssl req -in $@.csr -noout -text ; \
+	openssl req -new -key $@.key -out $@.csr -subj "$(MOSQUITTO_CLIENT_SUBJECT)" || openssl req -in $@.csr -noout -text ; \
 	openssl x509 -req -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -in $@.csr -out $@.crt || openssl x509 -in $@.crt -text -noout
