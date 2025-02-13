@@ -29,17 +29,6 @@ distclean:
 # clients.
 
 # =========================
-# variables
-
-# Materials that go in the subject
-IP:=$(MOSQUITTO_HOSTNAME)
-ORGANIZATION_NAME:=Laiti Inc.
-# NOTE: the Common Name (CN) for the CA must be different than that of the broker and the client
-SUBJECT_ROOT_CA:=$(MOSQUITTO_ROOT_CA_SUBJECT)
-SUBJECT_SERVER:=$(MOSQUITTO_SERVER_SUBJECT)
-SUBJECT_CLIENT:=/C=FI/ST=Pirkanmaa/L=Tampere/O=$(ORGANIZATION_NAME)/OU=Client/CN=$(IP)
-
-# =========================
 # CERTIFICATE AUTHROITY
 
 # KEY
