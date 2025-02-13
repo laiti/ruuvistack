@@ -101,6 +101,8 @@ services:
     networks:
       - mqtt
       - grafana
+    environment:
+      GF_SERVER_DOMAIN: ${GRAFANA_HOSTNAME}
 
 networks:
   mqtt:
