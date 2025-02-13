@@ -1,0 +1,148 @@
+# Easiest option: let RuuviBridge poll the gateway for measurements
+gateway_polling:
+  # Flag to enable or disable gateway polling
+  enabled: false
+  gateway_url: http://ip.or.hostname.of.the.gateway
+  # If you have enabled authentication on the gateway, specify the API key (bearer token) from the gateway Access Settings configuration page
+  bearer_token: ""
+  interval: 10s
+
+# Recommended option: Have the gateway send the measurements to a MQTT server and let RuuviBridge subscribe to updates in real time
+mqtt_listener:
+  # Flag to enable or disable subscribing to a topic on a MQTT server
+  enabled: true
+  # MQTT broker url, including scheme (tcp, ssl or ws), hostname or IP address, and port
+  broker_url: tcp://mosquitto:1883
+  # Client ID, required for persistent sessions and has to be unique on the MQTT server
+  client_id: RuuviBridgeListener
+  username: ruuvibridge
+  password: <your mqtt user password>
+  # Topic prefix to subscribe to, expecting RuuviTag measurements to be published as <topic_prefix>/<mac>
+  # You can use + character as a single-level wildcard, for example if you have the gateway mac address in the
+  # topic by checking the "Use Ruuvi Gateway's MAC address on the topic preﬁx" option in the Ruuvi Gateway config
+  # for example: ruuvi/+ as the topic prefix would match the topic ruuvi/<gateway_mac>/<tag_mac>
+  topic_prefix: ruuvi/+
+  # Topic where to publish LWT "status messages" on connect/disconnect. Empty means disabled.
+  # Note that the mqtt_listener and mqtt_publisher have their own distinct connections and you should not use the same lwt topic for both.
+  lwt_topic: "bridge_listener"
+  # Payload that will be published to lwt_topic when RuuviBridge connects
+  lwt_online_payload: '{"state":"online"}'
+  # Payload that will be published to lwt_topic when RuuviBridge disconnects
+  lwt_offline_payload: '{"state":"offline"}'
+
+# Third option: Configure Ruuvi Gateway to send measurements here via the custom http server setting
+http_listener:
+  # Flag to enable or disable the http listener
+  enabled: false
+  # Port to listen on. Cannot be the same as prometheus listen port if enabled
+  port: 8080
+
+# Extra processing of the values
+processing:
+  # Extended values are enabled by default but can be disabled by changing extended_values to false
+  extended_values: true
+  # Filter which tags are considered. Valid options:
+  # none - no filtering is done, all tags are processed (default)
+  # named - only tags which have a name configured will be processed
+  # allowlist - only mac addresses listed in filter_list will be processed
+  # denylist - mac addresses listed in filter_list will be skipped
+  filter_mode: none
+  # List of mac addresses to allow or deny if filter_mode is either allowlist or denylist
+  filter_list:
+    - FFEEDDCCBBAA
+    - F0E1D2C3B4A5
+
+# Supports both InfluxDB 1.8 and 2.x
+influxdb_publisher:
+  # Flag to enable or disable publishing the processed data to InfluxDB
+  enabled: false
+  # Minimum interval for measurements to publish per tag. InfluxDB handles frequent updates very efficiently due to delta compression so the default is no limit
+  minimum_interval: 0s
+  # URL for InfluxDB, including scheme, hostname and port
+  url: http://localhost:8086
+  # For InfluxDB 1.8 the auth_token is username and password in format "username:password"
+  auth_token: changethis
+  # This is ignored for InfluxDB 1.8
+  org: ""
+  # For InfluxDB 1.8 the bucket is the database name, with optional retention policy in format "database/retentionpolicy"
+  bucket: ruuvi
+  # Measurement name to use
+  measurement: ruuvi_measurements
+  # Uncomment to add additional influxdb tags to the measurements
+  #additional_tags:
+  #  mytag: myvalue
+  #  myothertag: myothervalue
+
+# Supports InfluxDB 3.x
+influxdb3_publisher:
+  # Flag to enable or disable publishing the processed data to InfluxDB
+  enabled: false
+  # Minimum interval for measurements to publish per tag. InfluxDB handles frequent updates very efficiently due to delta compression so the default is no limit
+  minimum_interval: 0s
+  # URL for InfluxDB3, including scheme, hostname and port
+  url: https://eu-central-1-1.aws.cloud2.influxdata.com
+  # Also referred to as "auth token"
+  auth_token: changethis
+  # Database to use
+  database: ruuvi
+  # Measurement name to use
+  measurement: ruuvi_measurements
+  # Uncomment to add additional influxdb tags to the measurements
+  #additional_tags:
+  #  mytag: myvalue
+  #  myothertag: myothervalue
+
+# Prometheus exporter for data
+prometheus:
+  # Flag to enable or disable exporting the measurements and RuuviBridge diagnostics in prometheus exposition format
+  enabled: false
+  # Port to listen on. Cannot be the same as http listener port if enabled
+  port: 8081
+
+# Publish the parsed and processed data back to MQTT. Can be the same server or a different one.
+mqtt_publisher:
+  # Flag to enable or disable publishing the processed data to a MQTT server
+  enabled: false
+  # Minimum interval for measurements to publish per tag. Accepts values in go duration format ( https://pkg.go.dev/time#ParseDuration ), for example 1m30s
+  minimum_interval: 30s
+  # MQTT broker url, including scheme (tcp, ssl or ws), hostname or IP address, and port
+  broker_url: tcp://ip.or.hostname:1883
+  # Client ID, required for persistent sessions and has to be unique on the MQTT server
+  client_id: RuuviBridgePublisher
+  username: ruuvibridge
+  password: ruuvipassword
+  # Topic prefix where to publish, in format <topic_prefix>/<mac>
+  # If you use the same server for a source, be sure to use a differnet topic prefix to avoid conflicts!
+  topic_prefix: ruuvitag
+  # Publish each measurement to its own topic so no JSON parsing is needed on the consumer side. This will publish
+  # to <topic_prefix>/<mac>/temperature, <topic_prefix>/<mac>/humidity, and so forth. When enabled, these are
+  # published in addition to the JSON string which is published to <topic_prefix>/<mac>, not in place of them.
+  publish_raw: false
+  # Topic where to publish LWT "status messages" on connect/disconnect. Empty means disabled.
+  # Note that the mqtt_listener and mqtt_publisher have their own distinct connections and you should not use the same lwt topic for both.
+  lwt_topic: ""
+  # Payload that will be published to lwt_topic when RuuviBridge connects
+  lwt_online_payload: '{"state":"online"}'
+  # Payload that will be published to lwt_topic when RuuviBridge disconnects
+  lwt_offline_payload: '{"state":"offline"}'
+  # Uncomment to enable creating Home Assistant MQTT discovery topics
+  #homeassistant_discovery_prefix: homeassistant
+
+# Optional names for the tags with the key being the mac address and value being the desired name
+tag_names:
+  FFEEDDCCBBAA: Indoors
+  F0E1D2C3B4A5: Fridge
+
+# Logging options for RuuviBridge itself
+logging:
+  # Type can be either "structured", "json" or "simple"
+  type: simple
+  # Valid logging levels from most verbose to least verbose: trace, debug, info, warn, error, fatal, panic
+  level: info
+  # Include timestamp in the log line. Can be useful to turn off with certain logging systems which add their own timestamps
+  timestamps: true
+  # Whether to include the log caller in the logs. This will increase the size of logs but it helps in troubleshooting in some cases
+  with_caller: false
+
+# Enable or disable debug mode. This will print all received measurements to the console among other debuggy things, useful for development, testing and troubleshooting purposes.
+debug: false
