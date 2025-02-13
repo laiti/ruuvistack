@@ -44,7 +44,10 @@ To use InfluxDB in this setup, you need to create couple of things manually.
 
 #### Create bucket and config
 
-The `-r 1825d` sets the retention period for the data. Adjust this according to your free disk space.
+Replace <token> with your InfluxDB token. The `-r 1825d` sets the retention period for the data. Adjust this according to your free disk space.
+
+TODO: what is token?
+TODO: does docker-compose need altering in order to connect to InfluxDB?
 
 ```
 influx config create --config-name ruuvi --host-url http://localhost:8086 --token <token> --active
