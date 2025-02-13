@@ -11,22 +11,33 @@ Docker-compose setup to set up a complete Ruuvitag monitoring setup with grafana
 
 - [RuuviBridge](https://github.com/Scrin/RuuviBridge) - As data bridge between Mosquitto and InfluxDB
 
+...and of course Docker and Docker-compose.
+
 ## Setup guide
 
 To bring the Docker containers up, simply populate .env file (example available at `examples/` dir) `docker-compose up` in the root directory.
 
 - `.env`
-- 
+- `ruuvibridge/config.yml`
 - `~/.config/influxdb2/username` 
 - `~/.config/influxdb2/password`
 - `~/.config/influxdb2/token`
 
+TODO: could infludxb files be in directory structure?
+
 Besides that, there's some manual work to do.
 
 ### Mosquitto
-MQTT does not require that much configuration, but if you wish to encrypt your traffic (highly recommended in public internet), you need to generate certificates. And deliver the client certificate to Ruuvi Gateway.
+
+#### Encryption
+If you wish to encrypt your traffic (highly recommended in public internet), you need to generate certificates. And deliver the client certificate to Ruuvi Gateway.
 
 In short the command is `make certs` but you might want to check the Makefile for details.
+
+#### Users
+Mosquitto users and passwords are defined in `mosquitto/passwd`. Passwords are hashed.
+
+TODO: how to create passwd file
 
 ### InfluxDB
 To use InfluxDB in this setup, you need to create couple of things manually.
@@ -64,6 +75,10 @@ from(bucket: "ruuvi")
     |> yield(name: "_time")
 ```
 
+
+### Ruuvi Gateway
+
+TODO
 
 ## Sources
 
