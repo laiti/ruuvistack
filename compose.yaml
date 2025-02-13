@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.9"
 
 services:
   influxdb2:
@@ -47,8 +47,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     environment:
-      GF_SERVER_DOMAIN: grafana.laiti.iki.fi
-      GF_SERVER_ROOT_URL: https://grafana.laiti.iki.fi/
+      GF_SERVER_DOMAIN: ${GRAFANA_HOSTNAME}
+      GF_SERVER_ROOT_URL: ${GRAFANA_HOSTNAME}
 
   mosquitto:
     image: eclipse-mosquitto:2.0-openssl
