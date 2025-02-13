@@ -1,10 +1,12 @@
 CERT_DIR:=mosquitto/config/certs
+
 CERTS:=\
-	$(MOUNTED_VOLUMES_TOP)/config/certs/ca/ca.crt \
-	$(MOUNTED_VOLUMES_TOP)/config/certs/broker/broker.key \
-	$(MOUNTED_VOLUMES_TOP)/config/certs/broker/broker.crt
+	$(CERT_DIR)/ca/ca.crt \
+	$(CERT_DIR)/broker/broker.key \
+	$(CERT_DIR)/broker/broker.crt
+
 CLIENT_CERTS:=\
-	$(MOUNTED_VOLUMES_TOP)/config/certs/clients/ruuvigw
+	$(CERT_DIR)/clients/ruuvigw
 
 include $(PWD)/.env
 
@@ -14,9 +16,9 @@ certs: $(CERTS) $(CLIENT_CERTS)
 .PHONY: distclean # This cleans everything
 distclean:
 	rm -f *~
-	rm -f mosquitto/config/certs/ca/*.crt mosquitto/config/certs/ca/*.key mosquitto/config/certs/ca/*.srl
-	rm -f mosquitto/config/certs/broker/*.crt mosquitto/config/certs/broker/*.key mosquitto/config/certs/broker/*.csr
-	rm -f mosquitto/config/certs/clients/*.crt mosquitto/config/certs/clients/*.key mosquitto/config/certs/clients/*.csr
+	rm -f $(CERT_DIR)/ca/*.crt $(CERT_DIR)/ca/*.key $(CERT_DIR)/ca/*.srl
+	rm -f $(CERT_DIR)/broker/*.crt $(CERT_DIR)/broker/*.key $(CERT_DIR)/broker/*.csr
+	rm -f $(CERT_DIR)/clients/*.crt $(CERT_DIR)/clients/*.key $(CERT_DIR)/clients/*.csr
 
 # ==================================================================
 # CERTIFICATES:
