@@ -13,15 +13,15 @@ include $(PWD)/.env
 .PHONY: certs
 certs: $(CERTS) $(CLIENT_CERTS)
 
-.PHONY: distclean # This cleans everything
+# This cleans everything, use with caution. Ensure that CERT_DIR is set.
+.PHONY: distclean 
 distclean:
 	rm -f *~
 	rm -f $(CERT_DIR)/ca/*.crt $(CERT_DIR)/ca/*.key $(CERT_DIR)/ca/*.srl
 	rm -f $(CERT_DIR)/broker/*.crt $(CERT_DIR)/broker/*.key $(CERT_DIR)/broker/*.csr
 	rm -f $(CERT_DIR)/clients/*.crt $(CERT_DIR)/clients/*.key $(CERT_DIR)/clients/*.csr
 
-
-# CREATE ROOT CA KEY
+# ROOT CA KEY
 # To remove password protetction, remove '-des3'
 mosquitto/config/certs/ca/ca.key:
 	openssl genrsa -des3 -out $@ 4096
@@ -39,7 +39,7 @@ mosquitto/config/certs/broker/broker.csr: mosquitto/config/certs/broker/broker.k
 	openssl req -new -key $< -out $@ -subj "$(MOSQUITTO_BROKER_SUBJECT)" || openssl req -in $@ -noout -text
 
 # BROKER CERTIFICATE
-## Create broker certificate with CSR and CA Root key
+# Created using CSR and CA Root key
 mosquitto/config/certs/broker/broker.crt: mosquitto/config/certs/broker/broker.csr mosquitto/config/certs/ca/ca.crt mosquitto/config/certs/ca/ca.key 
 	openssl x509 -req -in mosquitto/config/certs/broker/broker.csr -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -out $@ -days 1850 -sha256 || openssl x509 -in $@ -text -noout
 
