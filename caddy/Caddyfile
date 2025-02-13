@@ -1,4 +1,4 @@
-grafana.laiti.iki.fi {
+{$GF_SERVER_DOMAIN} {
     reverse_proxy http://grafana:3000 {
          header_up Host {host}
          header_up X-Real-IP {remote}
