@@ -66,9 +66,20 @@ influx user password -n grafana
 influx auth create --org ruuvi --user grafana --read-authorizations --read-buckets
 ```
 
-### Grafana
 
-Example query for single tag:
+### Ruuvi Gateway
+
+TODO
+
+### Ruuvibridge
+
+Ruuvibridge is configured with just `ruuvibridge/config.yml`, example config is in `examples/ruuvibridge.config.yml. This setup uses the recommended **MQTT listener** mode. As the traffic between Mosquitto, Ruuvibridge and InfluxDB happens between Docker containers, no SSL is required.
+
+Change the `username` and `password` under `mqtt_listener` to the ones you created in Mosquitto. And configure your Ruuvitag BT addressess under `tag_names` and you should be good to go.
+
+### Grafana queries
+
+Once you've set up grafana, you can start querying Ruuvitag data if all works. Example query for single tag:
 
 ```
 from(bucket: "ruuvi")
@@ -77,17 +88,6 @@ from(bucket: "ruuvi")
     |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: true)
     |> yield(name: "_time")
 ```
-
-
-### Ruuvi Gateway
-
-TODO
-
-### Ruuvibridge
-
-Ruuvibridge is configured with just `ruuvibridge/config.yml`. The same directory contains a sample config. This setup uses the recommended **MQTT listener** mode.
-
-Change the `username` and `password` under `mqtt_listener` to the one you created in mosquitto. and configure your Ruuvitag BT addressess under `tag_names` and you should be good to go.
 
 ## Sources
 
