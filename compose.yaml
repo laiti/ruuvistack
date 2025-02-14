@@ -111,11 +111,11 @@ networks:
 
 secrets:
   influxdb2-admin-username:
-    file: ~/.config/influxdb2/username
+    environment: INFLUXDB_ADMIN_USERNAME
   influxdb2-admin-password:
-    file: ~/.config/influxdb2/password
+    environment: INFLUXDB_ADMIN_PASSWORD
   influxdb2-admin-token:
-    file: ~/.config/influxdb2/token
+    environment: INFLUXDB_ADMIN_TOKEN
 
 volumes:
   influxdb2-data:

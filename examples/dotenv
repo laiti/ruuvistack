@@ -1,5 +1,10 @@
 GRAFANA_HOSTNAME=grafana.mydomain.tld
 
+# InfluxDB secrets
+INFLUXDB_ADMIN_PASSWORD=MyAdminPassword
+INFLUXDB_ADMIN_USERNAME=MyAdmin
+INFLUXDB_ADMIN_TOKEN=MyAdminToken
+
 # Variables for mosquitto certificate
 MOSQUITTO_BROKER_HOSTNAME=mqtt.mydomain.tld
 MOSQUITTO_CERT_ORG="My Org."
