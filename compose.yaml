@@ -17,6 +17,9 @@ services:
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_ADMIN_TOKEN}
       DOCKER_INFLUXDB_INIT_ORG: ruuvi
       DOCKER_INFLUXDB_INIT_BUCKET: ruuvi
+    # Enable this if you need to connect to InfluxDB from the host
+    #ports:
+    #  - "8086:8086"
     volumes:
       - influxdb2-data:/var/lib/influxdb2:rw
       - influxdb2-config:/etc/influxdb2:rw

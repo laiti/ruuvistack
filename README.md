@@ -35,11 +35,11 @@ Mosquitto users and passwords are defined in `mosquitto/config/passwd`. Password
 ### InfluxDB
 To use InfluxDB in this setup, you need to create couple of things manually.
 
-#### Create bucket and config
+#### Create ruuvi bucket and config
 
-The `-r 1825d` sets the retention period for the data. Adjust this according to your free disk space and how frequently Ruuvitags send the data. I use the longlife firmware version in my tags to extend battery life and save disk space.
+The `-r 1825d` sets the retention period in days for the data. Adjust this according to your free disk space and how frequently Ruuvitags send the data. I use the longlife firmware version in my tags to extend battery life and save disk space.
 
-TODO: does docker-compose network rules need altering in order to connect to InfluxDB?
+Note: By default the InfluxDB is accessible only from Grafana and Ruuvibridge containers. Should you wish to run the InfluxDB command, you need to open the port. One way is to enable the `port:` statement from `compose.yaml` and restart container.
 
 ```
 . ./.env
