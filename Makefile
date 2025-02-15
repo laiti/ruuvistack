@@ -23,7 +23,7 @@ distclean:
 
 # For creating Mosquitto users we need to access the mosquitto_passwd tool which is only inside the container.
 .PHONY: users
-users: mosquitto/passwd
+users: mosquitto/config/passwd
 	docker run -it --rm -v $(shell pwd)/mosquitto/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b /mosquitto/config/passwd $(MOSQUITTO_GATEWAY_USER) $(MOSQUITTO_GATEWAY_PASSWORD)
 	docker run -it --rm -v $(shell pwd)/mosquitto/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b /mosquitto/config/passwd $(MOSQUITTO_RUUVIBRIDGE_USER) $(MOSQUITTO_RUUVIBRIDGE_PASSWORD)
 

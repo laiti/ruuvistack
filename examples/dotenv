@@ -5,6 +5,12 @@ INFLUXDB_ADMIN_PASSWORD=MyAdminPassword
 INFLUXDB_ADMIN_USERNAME=MyAdmin
 INFLUXDB_ADMIN_TOKEN=MyAdminToken
 
+# Mosquitto users
+MOSQUITTO_GATEWAY_USER=gateway
+MOSQUITTO_GATEWAY_PASSWORD=GatewayMosquittoPassword
+MOSQUITTO_RUUVIBRIDGE_USER=ruuvibridge
+MOSQUITTO_RUUVIBRIDGE_PASSWORD=RuuvibridgeMosquittoPassword
+
 # Variables for mosquitto certificate
 MOSQUITTO_BROKER_HOSTNAME=mqtt.mydomain.tld
 MOSQUITTO_CERT_ORG=MyOrg.
