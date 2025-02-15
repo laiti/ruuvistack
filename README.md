@@ -29,10 +29,14 @@ flowchart TD
 
 ## Setup guide
 
-To bring the Docker containers up, simply populate .env file (example available at `examples/` dir) `docker-compose up` in the root directory.
+### In short
+To bring the Docker containers up:
+1) Populate `.env` file (example available at `examples/` dir)
+2) Create Mosquitto certs with `make certs` and users with `make users`
+3) Create Ruuvibridge config with `make ruuvibridge-config`
+4) Run `docker-compose up` in the root directory.
 
-- `.env`
-- `ruuvibridge/config.yml`
+NOTE: This launches Grafana in the public net with `admin/admin` default credentials to the hostname you set in `.env`. Be sure to change the password before anyone else does it. If they do not work, refer to the [grafana-oss docker image documentation](https://hub.docker.com/r/grafana/grafana-oss).
 
 Besides that, there's some manual work to do.
 
@@ -49,11 +53,13 @@ Mosquitto users and passwords are defined in `mosquitto/config/passwd`. Password
 ### InfluxDB
 To use InfluxDB in, you need to create couple of things manually. This setup uses InfluxDB 2.
 
+#### Connecting to InfluxDB
+
+By default the InfluxDB is accessible only from Grafana and Ruuvibridge containers. Should you wish to run the InfluxDB command, you need to open the port. One way is to enable the `port:` statement from `compose.yaml` and restart container. You can create InfluxDB client config to your home directory (`~/.influxdbv2/configs`) with `make influxdb-config`.
+
 #### Create ruuvi bucket and config
 
 The `-r 1825d` sets the retention period in days for the data. Adjust this according to your free disk space and how frequently Ruuvitags send the data. I use the longlife firmware version in my tags to extend battery life and save disk space.
-
-Note: By default the InfluxDB is accessible only from Grafana and Ruuvibridge containers. Should you wish to run the InfluxDB command, you need to open the port. One way is to enable the `port:` statement from `compose.yaml` and restart container.
 
 ```
 . ./.env
@@ -76,28 +82,33 @@ influx auth create --org ${INFLUXDB_ORGANIZATION} --user grafana --read-authoriz
 
 Configure ruuvibridge token to `ruuvibridge/config.yml` under the `influxdb_publisher`.
 
-
 ### Ruuvi Gateway
 
 TODO
 
 ### Ruuvibridge
 
-Ruuvibridge is configured with just `ruuvibridge/config.yml`, example config is in `examples/ruuvibridge.config.yml. This setup uses the recommended **MQTT listener** mode. As the traffic between Mosquitto, Ruuvibridge and InfluxDB happens between Docker containers, no SSL is required.
+Ruuvibridge is configured with just `ruuvibridge/config.yml`, example config is in `examples/ruuvibridge.config.yml`. This setup uses the recommended **MQTT listener** mode. As the traffic between Mosquitto, Ruuvibridge and InfluxDB happens between Docker containers, no SSL is required. You can also create a template from variables in `.env` via `Makefile` with command `make ruuvibridge-config`
 
 Change the `username` and `password` under `mqtt_listener` to the ones you created in Mosquitto. And configure your Ruuvitag BT addressess under `tag_names` and you should be good to go.
 
-### Grafana queries
+### Grafana
 
-Once you've set up grafana, you can start querying Ruuvitag data if all works. Example query for single tag:
+Once you've set up Grafana, you can log in and start querying Ruuvitag data if all works. As stated above, the default login is `admin/admin`. Example query for single tag with offset (usually handy with humidity measurements):
 
 ```
 from(bucket: "ruuvi")
     |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
     |> filter(fn: (r) => r._measurement == "ruuvi_measurements" and r._field == "temperature" and r.name == "Sauna")
+    |> map(fn: (r) => ({r with _value: float(v: r._value) - 5.75 }))
     |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: true)
     |> yield(name: "_time")
 ```
+
+The `r.name` requires that you've set up the `tag_names` in `ruuvibridge/config.yml` properly.
+
+### Telegram
+Grafana supports alert messages via Telegram out of the box. You can find some alert templates in the `doc/` directory.
 
 ## Sources
 

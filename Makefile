@@ -30,7 +30,7 @@ users:
 	docker run -it --rm -v $(shell pwd)/mosquitto/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b /mosquitto/config/passwd $(MOSQUITTO_RUUVIBRIDGE_USER) $(MOSQUITTO_RUUVIBRIDGE_PASSWORD)
 
 # TODO: check if this file exists and do not overwrite it.
-.PHONY: ruuvibridge
+.PHONY: ruuvibridge-config
 ruuvibridge:
 	cat examples/ruuvibridge.config.yml|sed "s/MOSQUITTO_RUUVIBRIDGE_PASSWORD/${MOSQUITTO_RUUVIBRIDGE_PASSWORD}/" > ruuvibridge/config.yml
 	chmod 0600 ruuvibridge/config.yml
