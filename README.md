@@ -19,52 +19,48 @@ To bring the Docker containers up, simply populate .env file (example available 
 
 - `.env`
 - `ruuvibridge/config.yml`
-- `~/.config/influxdb2/username` 
-- `~/.config/influxdb2/password`
-- `~/.config/influxdb2/token`
-
-TODO: could infludxb files be in directory structure?
 
 Besides that, there's some manual work to do.
 
 ### Mosquitto
 
 #### Encryption
-If you wish to encrypt your traffic (highly recommended in public internet), you need to generate certificates. And deliver the client certificate to Ruuvi Gateway.
+If you wish to encrypt your traffic (highly recommended in public internet), you need to generate certificates. And deliver the client certificate to Ruuvi Gateway. In short the command is `make certs` but you might want to check the Makefile for details.
 
-In short the command is `make certs` but you might want to check the Makefile for details.
+We could use Caddy as well to encrypt the traffic but I am not sure how well that works with WebSockets.
 
 #### Users
-Mosquitto users and passwords are defined in `mosquitto/passwd`. Passwords are hashed.
-
-TODO: how to create passwd file
+Mosquitto users and passwords are defined in `mosquitto/config/passwd`. Passwords are hashed. To create the file with required gateway and ruuvibridge users, simply command `make users`.
 
 ### InfluxDB
 To use InfluxDB in this setup, you need to create couple of things manually.
 
 #### Create bucket and config
 
-Replace <token> with your InfluxDB token. The `-r 1825d` sets the retention period for the data. Adjust this according to your free disk space.
+The `-r 1825d` sets the retention period for the data. Adjust this according to your free disk space and how frequently Ruuvitags send the data. I use the longlife firmware version in my tags to extend battery life and save disk space.
 
-TODO: what is token?
 TODO: does docker-compose network rules need altering in order to connect to InfluxDB?
 
 ```
-influx config create --config-name ruugvi --host-url http://localhost:8086 --token <token> --active
+. ./.env
+influx config create --config-name ruuvi --host-url http://localhost:8086 --token ${INFLUXDB_ADMIN_TOKEN} --active
 
-influx bucket create -n ruuvi --org-id <organization-id> -r 1825d -t <token>
+influx bucket create -n ruuvi --org-id ${INFLUXDB_ORG} -r 1825d -t <token>
 ```
 
 
 #### Create grafana and ruuvibridge users:
 ```
+. ./.env
 influx user create -n ruuvibridge -o ruuvi
 influx user password -n ruuvibridge
 
 influx user create -n grafana -o ruuvi
 influx user password -n grafana
-influx auth create --org ruuvi --user grafana --read-authorizations --read-buckets
+influx auth create --org ${INFLUXDB_ORG} --user grafana --read-authorizations --read-buckets
 ```
+
+Configure ruuvibridge token to `ruuvibridge/config.yml`
 
 
 ### Ruuvi Gateway

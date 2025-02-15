@@ -16,7 +16,8 @@ mqtt_listener:
   # Client ID, required for persistent sessions and has to be unique on the MQTT server
   client_id: RuuviBridgeListener
   username: ruuvibridge
-  password: <your mqtt user password>
+  # Replace this with the password from .env file
+  password: MOSQUITTO_RUUVIBRIDGE_PASSWORD
   # Topic prefix to subscribe to, expecting RuuviTag measurements to be published as <topic_prefix>/<mac>
   # You can use + character as a single-level wildcard, for example if you have the gateway mac address in the
   # topic by checking the "Use Ruuvi Gateway's MAC address on the topic preﬁx" option in the Ruuvi Gateway config

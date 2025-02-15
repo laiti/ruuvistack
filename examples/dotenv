@@ -1,9 +1,12 @@
 GRAFANA_HOSTNAME=grafana.mydomain.tld
 
-# InfluxDB secrets
+# InfluxDB admin secrets
 INFLUXDB_ADMIN_PASSWORD=MyAdminPassword
 INFLUXDB_ADMIN_USERNAME=MyAdmin
 INFLUXDB_ADMIN_TOKEN=MyAdminToken
+
+# InfluxDB Organization name
+INFLUXDB_ORG=ruuvi
 
 # Mosquitto users
 MOSQUITTO_GATEWAY_USER=gateway
