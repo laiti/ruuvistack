@@ -58,7 +58,6 @@ services:
     ports:
       - "8886:8886"  # MQTT Websocket open to world for Ruuvi Gateway
     volumes:
-      - ./mosquitto/passwd:/mosquitto/passwd:rw
       - ./mosquitto/config:/mosquitto/config:rw
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
