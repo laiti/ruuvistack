@@ -42,8 +42,6 @@ TODO: how to create passwd file
 ### InfluxDB
 To use InfluxDB in this setup, you need to create couple of things manually.
 
-```
-
 #### Create bucket and config
 
 Replace <token> with your InfluxDB token. The `-r 1825d` sets the retention period for the data. Adjust this according to your free disk space.
