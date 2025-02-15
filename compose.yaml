@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   influxdb2:
     image: influxdb:2
