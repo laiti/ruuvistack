@@ -47,7 +47,7 @@ We could use Caddy as well to encrypt the traffic but I am not sure how well tha
 Mosquitto users and passwords are defined in `mosquitto/config/passwd`. Passwords are hashed. To create the file with required gateway and ruuvibridge users, simply command `make users`.
 
 ### InfluxDB
-To use InfluxDB in this setup, you need to create couple of things manually. This setup uses InfluxDB 2.
+To use InfluxDB in, you need to create couple of things manually. This setup uses InfluxDB 2.
 
 #### Create ruuvi bucket and config
 
@@ -57,21 +57,21 @@ Note: By default the InfluxDB is accessible only from Grafana and Ruuvibridge co
 
 ```
 . ./.env
-influx config create --config-name ruuvi --host-url http://localhost:8086 --token ${INFLUXDB_ADMIN_TOKEN} --active
+influx config create --config-name ${INFLUXDB_BUCKET} --host-url http://localhost:8086 --token ${INFLUXDB_ADMIN_TOKEN} --active
 
-influx bucket create -n ruuvi --org-id ${INFLUXDB_ORG} -r 1825d -t <token>
+influx bucket create -n ${INFLUXDB_BUCKET} --org-id ${INFLUXDB_ORGANIZATION} -r 1825d -t <token>
 ```
 
 
 #### Create grafana and ruuvibridge users:
 ```
 . ./.env
-influx user create -n ruuvibridge -o ruuvi
+influx user create -n ruuvibridge --org ${INFLUXDB_ORGANIZATION}
 influx user password -n ruuvibridge
 
-influx user create -n grafana -o ruuvi
+influx user create -n grafana --org ${INFLUXDB_ORGANIZATION}
 influx user password -n grafana
-influx auth create --org ${INFLUXDB_ORG} --user grafana --read-authorizations --read-buckets
+influx auth create --org ${INFLUXDB_ORGANIZATION} --user grafana --read-authorizations --read-buckets
 ```
 
 Configure ruuvibridge token to `ruuvibridge/config.yml` under the `influxdb_publisher`.
