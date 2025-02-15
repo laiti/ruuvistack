@@ -13,6 +13,20 @@ Docker-compose setup to set up a complete Ruuvitag monitoring setup with grafana
 
 ...and of course Docker and Docker-compose.
 
+## Architecture in Mermaid graph format
+
+![Preview](https://raw.githubusercontent.com/laiti/ruuvitag-grafana/main/doc/architecture.png)
+
+```
+flowchart TD
+    A[Ruuvitags] -->|Bluetooth broadcast| B(Ruuvi Gateway)
+    B -->|MQTT over TLS| C(Mosquitto)
+    D(Ruuvibridge) -->|Subscribe via MQTT| C
+    D -->|Write measurement data| E(InfluxDB)
+    F(Grafana) -->|Read measurement data| E
+    F -->|Temperature alert via HTTPS API| G(Telegram bot)
+```
+
 ## Setup guide
 
 To bring the Docker containers up, simply populate .env file (example available at `examples/` dir) `docker-compose up` in the root directory.
