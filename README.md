@@ -105,7 +105,7 @@ from(bucket: "ruuvi")
     |> yield(name: "_time")
 ```
 
-The `r.name` requires that you've set up the `tag_names` in `ruuvibridge/config.yml` properly.
+Using the `r.name` requires that you've set up the `tag_names` in `ruuvibridge/config.yml` properly.
 
 ### Telegram
 Grafana supports alert messages via Telegram out of the box. You can find some alert templates in the `doc/` directory.
