@@ -60,7 +60,7 @@ influx user password -n grafana
 influx auth create --org ${INFLUXDB_ORG} --user grafana --read-authorizations --read-buckets
 ```
 
-Configure ruuvibridge token to `ruuvibridge/config.yml`
+Configure ruuvibridge token to `ruuvibridge/config.yml` under the `influxdb_publisher`.
 
 
 ### Ruuvi Gateway
