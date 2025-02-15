@@ -33,7 +33,7 @@ We could use Caddy as well to encrypt the traffic but I am not sure how well tha
 Mosquitto users and passwords are defined in `mosquitto/config/passwd`. Passwords are hashed. To create the file with required gateway and ruuvibridge users, simply command `make users`.
 
 ### InfluxDB
-To use InfluxDB in this setup, you need to create couple of things manually.
+To use InfluxDB in this setup, you need to create couple of things manually. This setup uses InfluxDB 2.
 
 #### Create ruuvi bucket and config
 
