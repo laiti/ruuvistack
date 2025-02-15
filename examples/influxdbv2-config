@@ -1,0 +1,6 @@
+# InfluxDB2 client configuration
+[ruuvi]
+  url    = "http://127.0.0.1:8086"
+  token  = "INFLUXDB_TOKEN"
+  org    = "ruuvi"
+  active = true

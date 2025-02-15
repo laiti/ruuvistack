@@ -35,6 +35,11 @@ ruuvibridge:
 	cat examples/ruuvibridge.config.yml|sed "s/MOSQUITTO_RUUVIBRIDGE_PASSWORD/${MOSQUITTO_RUUVIBRIDGE_PASSWORD}/" > ruuvibridge/config.yml
 	chmod 0600 ruuvibridge/config.yml
 
+.PHONY: influx-config
+influx-config:
+	install -m 0700 -d ~/.influxdbv2/
+	cat examples/influxdb2-config|sed "s/INFLUXDB2_TOKEN/${INFLUXDB2_TOKEN}/" > ~/influxdb2/configs
+
 # ROOT CA KEY
 # To remove password protetction, remove '-des3'
 mosquitto/config/certs/ca/ca.key:
