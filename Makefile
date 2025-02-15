@@ -33,7 +33,7 @@ users:
 .PHONY: ruuvibridge
 ruuvibridge:
 	cat examples/ruuvibridge.config.yml|sed "s/MOSQUITTO_RUUVIBRIDGE_PASSWORD/${MOSQUITTO_RUUVIBRIDGE_PASSWORD}/" > ruuvibridge/config.yml
-	chmod 0700 ruuvibridge/config.yml
+	chmod 0600 ruuvibridge/config.yml
 
 # ROOT CA KEY
 # To remove password protetction, remove '-des3'
