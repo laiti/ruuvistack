@@ -38,7 +38,8 @@ ruuvibridge:
 .PHONY: influx-config
 influx-config:
 	install -m 0700 -d ~/.influxdbv2/
-	cat examples/influxdb2-config|sed "s/INFLUXDB2_TOKEN/${INFLUXDB2_TOKEN}/" > ~/influxdb2/configs
+	cat examples/influxdbv2-config|sed "s/INFLUXDB2_TOKEN/${INFLUXDB_ADMIN_TOKEN}/" > ~/.influxdbv2/configs
+	chmod 0600 ~/.influxdbv2/configs
 
 # ROOT CA KEY
 # To remove password protetction, remove '-des3'
