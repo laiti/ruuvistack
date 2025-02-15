@@ -3,7 +3,7 @@ services:
     image: influxdb:2
     container_name: influxdb2
     # InfluxDB runs by default with UID 1000, it is my user and I don't want that
-    user: 1338:1338
+    #user: 1338:1338
     expose:
     - 8086
     networks:
@@ -22,10 +22,6 @@ services:
       - influxdb2-config:/etc/influxdb2:rw
       - /etc/localtime:/etc/localtime:ro # To ensure that host and container have the same time
       - /etc/timezone:/etc/timezone:ro
-    # In some environments this container fails due to lack of directory permissions
-    build:
-      context: .
-      command: install -g 1338 -o 1338 -m 755 -d /var/lib/influxdb2 /etc/influxdb2
 
   grafana:
     image: grafana/grafana-oss
