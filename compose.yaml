@@ -22,6 +22,10 @@ services:
       - influxdb2-config:/etc/influxdb2:rw
       - /etc/localtime:/etc/localtime:ro # To ensure that host and container have the same time
       - /etc/timezone:/etc/timezone:ro
+    # In some environments this container fails due to lack of directory permissions
+    build:
+      context: .
+      command: install -g 1338 -o 1338 -m 755 -d /var/lib/influxdb2 /etc/influxdb2
 
   grafana:
     image: grafana/grafana-oss

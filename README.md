@@ -50,7 +50,7 @@ TODO: what is token?
 TODO: does docker-compose network rules need altering in order to connect to InfluxDB?
 
 ```
-influx config create --config-name ruuvi --host-url http://localhost:8086 --token <token> --active
+influx config create --config-name ruugvi --host-url http://localhost:8086 --token <token> --active
 
 influx bucket create -n ruuvi --org-id <organization-id> -r 1825d -t <token>
 ```
