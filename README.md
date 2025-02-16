@@ -32,7 +32,7 @@ flowchart TD
     end
     F -->|Temperature alert via HTTPS API| G@{shape: rect, label: "Telegram bot"}
 ```
-![Preview](https://raw.githubusercontent.com/laiti/ruuvitag-grafana/main/doc/architecture.png)
+![Preview](https://raw.githubusercontent.com/laiti/ruuvi-dashboard/main/doc/architecture.png)
 
 ## Setup guide
 
@@ -146,7 +146,7 @@ from(bucket: "ruuvi")
 Using the `r.name` requires that you've set up the `tag_names` in `ruuvibridge/config.yml` properly.
 
 #### Alerts as Telegram messages
-Grafana supports alert messages via Telegram out of the box. You can find [example alert template](doc/telegram-alert.template) in the `doc/` directory
+Grafana supports alert messages via Telegram out of the box. You can find [example alert template](examples/telegram-alert.template) in the `doc/` directory
 ## Sources
 
 - https://github.com/mchestr/Secure-MQTT-Docker
