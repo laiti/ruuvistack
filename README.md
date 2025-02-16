@@ -17,16 +17,20 @@ Docker setup to set up a complete Ruuvitag monitoring stack with alerts. Aims to
 
 ...and of course Docker and Docker-compose.
 
-## Architecture in Mermaid graph format
+## Architecture
+
+### As (Mermaid)[https://mermaid.live/] graph
 
 ```
 flowchart TD
     A[Ruuvitags] -->|Bluetooth broadcast| B(Ruuvi Gateway)
-    B -->|MQTT over TLS| C(Mosquitto)
+    B -->|MQTT over TLS| C@{ shape: processes, label: "Mosquitto" }
+    subgraph Docker containers
     D(Ruuvibridge) -->|Subscribe via MQTT| C
-    D -->|Write measurement data| E(InfluxDB)
-    F(Grafana) -->|Read measurement data| E
-    F -->|Temperature alert via HTTPS API| G(Telegram bot)
+    D -->|Write measurement data| E@{ shape: cyl, label: "InfluxDB" }
+    F@{ shape: win-pane, label: "Grafana" } -->|Read measurement data| E
+    end
+    F -->|Temperature alert via HTTPS API| G@{shape: rect, label: "Telegram bot"}
 ```
 ![Preview](https://raw.githubusercontent.com/laiti/ruuvitag-grafana/main/doc/architecture.png)
 
