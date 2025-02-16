@@ -27,7 +27,7 @@ config: mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
 # For creating Mosquitto users we need to access the mosquitto_passwd tool which is only inside the container.
 mosquitto/config/passwd:
 	touch $@
-	chmod 0700 $@
+	chmod 0600 $@
 	docker run -it --rm -v $(shell pwd)/mosquitto/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b $@ $(MOSQUITTO_GATEWAY_USER) $(MOSQUITTO_GATEWAY_PASSWORD)
 	docker run -it --rm -v $(shell pwd)/mosquitto/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b $@ $(MOSQUITTO_RUUVIBRIDGE_USER) $(MOSQUITTO_RUUVIBRIDGE_PASSWORD)
 
