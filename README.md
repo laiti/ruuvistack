@@ -19,7 +19,9 @@ Docker setup to set up a complete Ruuvitag monitoring stack with alerts. Aims to
 
 ## Architecture
 
-### As (Mermaid)[https://mermaid.live/] graph
+### As [Mermaid](https://mermaid.live/) graph
+
+![Preview](https://raw.githubusercontent.com/laiti/ruuvi-dashboard/main/doc/architecture.png)
 
 ```
 flowchart TD
@@ -32,7 +34,6 @@ flowchart TD
     end
     F -->|Temperature alert via HTTPS API| G@{shape: rect, label: "Telegram bot"}
 ```
-![Preview](https://raw.githubusercontent.com/laiti/ruuvi-dashboard/main/doc/architecture.png)
 
 ## Setup guide
 
