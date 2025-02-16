@@ -33,7 +33,7 @@ flowchart TD
 To bring the Docker containers up:
 1) Populate `.env` file (example available at `examples/` dir)
 2) Create Mosquitto certs with `make certs` and users with `make users`
-3) Create Ruuvibridge config with `make ruuvibridge-config`
+3) Create Ruuvibridge config, InfluxDB2 client config and Mosquitto passwd file with `make config`
 4) Run `docker-compose up` in the root directory.
 
 NOTE: This launches Grafana in the public net with `admin/admin` default credentials to the hostname you set in `.env`. Be sure to change the password before anyone else does it. If they do not work, refer to the [grafana-oss docker image documentation](https://hub.docker.com/r/grafana/grafana-oss).
@@ -43,7 +43,7 @@ Besides that, there's some manual work to do.
 ### Mosquitto
 
 #### Encryption
-If you wish to encrypt your traffic (highly recommended in public internet), you need to generate certificates. And deliver the client certificate to Ruuvi Gateway. In short the command is `make certs` but you might want to check the Makefile for details.
+If you wish to encrypt your traffic (highly recommended in public internet), you need to generate certificates. And deliver the client certificate to Ruuvi Gateway. In short the command is `make config` but you might want to check the Makefile for details.
 
 We could use Caddy as well to encrypt the traffic but I am not sure how well that works with WebSockets.
 
@@ -55,7 +55,7 @@ To use InfluxDB in, you need to create couple of things manually. This setup use
 
 #### Connecting to InfluxDB
 
-By default the InfluxDB is accessible only from Grafana and Ruuvibridge containers. Should you wish to run the InfluxDB command, you need to open the port. One way is to enable the `port:` statement from `compose.yaml` and restart container. You can create InfluxDB client config to your home directory (`~/.influxdbv2/configs`) with `make influxdb-config`.
+By default the InfluxDB is accessible only from Grafana and Ruuvibridge containers. Should you wish to run the InfluxDB command, you need to open the port. One way is to enable the `port:` statement from `compose.yaml` and restart container. You can create InfluxDB client config to your home directory (`~/.influxdbv2/configs`) with `make config`.
 
 #### Create ruuvi bucket and config
 
@@ -88,7 +88,7 @@ TODO
 
 ### Ruuvibridge
 
-Ruuvibridge is configured with just `ruuvibridge/config.yml`, example config is in `examples/ruuvibridge.config.yml`. This setup uses the recommended **MQTT listener** mode. As the traffic between Mosquitto, Ruuvibridge and InfluxDB happens between Docker containers, no SSL is required. You can also create a template from variables in `.env` via `Makefile` with command `make ruuvibridge-config`
+Ruuvibridge is configured with just `ruuvibridge/config.yml`, example config is in `examples/ruuvibridge.config.yml`. This setup uses the recommended **MQTT listener** mode. As the traffic between Mosquitto, Ruuvibridge and InfluxDB happens between Docker containers, no SSL is required. You can also create a template from variables in `.env` via `Makefile` with command `make config`
 
 Change the `username` and `password` under `mqtt_listener` to the ones you created in Mosquitto. And configure your Ruuvitag BT addressess under `tag_names` and you should be good to go.
 

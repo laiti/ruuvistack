@@ -21,25 +21,24 @@ distclean:
 	rm -f $(CERT_DIR)/broker/*.crt $(CERT_DIR)/broker/*.key $(CERT_DIR)/broker/*.csr
 	rm -f $(CERT_DIR)/clients/*.crt $(CERT_DIR)/clients/*.key $(CERT_DIR)/clients/*.csr
 
+.PHONY: config
+config: mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
+
 # For creating Mosquitto users we need to access the mosquitto_passwd tool which is only inside the container.
-.PHONY: users
-users:
-	touch mosquitto/config/passwd
-	chmod 0700 mosquitto/config/passwd
-	docker run -it --rm -v $(shell pwd)/mosquitto/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b /mosquitto/config/passwd $(MOSQUITTO_GATEWAY_USER) $(MOSQUITTO_GATEWAY_PASSWORD)
-	docker run -it --rm -v $(shell pwd)/mosquitto/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b /mosquitto/config/passwd $(MOSQUITTO_RUUVIBRIDGE_USER) $(MOSQUITTO_RUUVIBRIDGE_PASSWORD)
+mosquitto/config/passwd:
+	touch $@
+	chmod 0700 $@
+	docker run -it --rm -v $(shell pwd)/mosquitto/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b $@ $(MOSQUITTO_GATEWAY_USER) $(MOSQUITTO_GATEWAY_PASSWORD)
+	docker run -it --rm -v $(shell pwd)/mosquitto/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b $@ $(MOSQUITTO_RUUVIBRIDGE_USER) $(MOSQUITTO_RUUVIBRIDGE_PASSWORD)
 
-# TODO: check if this file exists and do not overwrite it.
-.PHONY: ruuvibridge-config
-ruuvibridge:
-	cat examples/ruuvibridge.config.yml|sed "s/MOSQUITTO_RUUVIBRIDGE_PASSWORD/${MOSQUITTO_RUUVIBRIDGE_PASSWORD}/" > ruuvibridge/config.yml
-	chmod 0600 ruuvibridge/config.yml
+ruuvibridge/config.yml:
+	cat examples/ruuvibridge.config.yml|sed "s/MOSQUITTO_RUUVIBRIDGE_PASSWORD/${MOSQUITTO_RUUVIBRIDGE_PASSWORD}/" > $@
+	chmod 0600 $@
 
-.PHONY: influx-config
-influx-config:
+~/.influxdbv2/configs:
 	install -m 0700 -d ~/.influxdbv2/
-	cat examples/influxdbv2-config|sed "s/INFLUXDB_TOKEN/${INFLUXDB_ADMIN_TOKEN}/" > ~/.influxdbv2/configs
-	chmod 0600 ~/.influxdbv2/configs
+	cat examples/influxdbv2-config|sed "s/INFLUXDB_TOKEN/${INFLUXDB_ADMIN_TOKEN}/" > $@
+	chmod 0600 $@
 
 # ROOT CA KEY
 # To remove password protetction, remove '-des3'
