@@ -1,21 +1,23 @@
 # Ruuvi-docker
-Docker-compose setup to set up a complete Ruuvitag monitoring setup with grafana. Consists of:
+Docker setup to set up a complete Ruuvitag monitoring stack with alerts. Aims to be highly configurable in a single place (.env file.)
 
-- [Eclipse Mosquitto™](https://mosquitto.org/) - An open source MQTT broker
+## Components
 
-- [Caddy](https://caddyserver.com/) - The Ultimate Server with Automatic HTTPS
+- [Ruuvi Gateway](https://ruuvi.com/gateway/) - A dedicated device to route Ruuvitag data with MQTT.
 
-- [Grafana](https://grafana.com) - The open and composable observability platform
+- [Eclipse Mosquitto™](https://mosquitto.org/) - An open source MQTT broker.
 
-- [InfluxDB](https://www.influxdata.com/) - Platform for time series data
+- [Caddy](https://caddyserver.com/) - The Ultimate Server with Automatic HTTPS.
 
-- [RuuviBridge](https://github.com/Scrin/RuuviBridge) - As data bridge between Mosquitto and InfluxDB
+- [Grafana](https://grafana.com/) - The open and composable observability platform.
+
+- [InfluxDB](https://www.influxdata.com/) - Platform for time series data.
+
+- [RuuviBridge](https://github.com/Scrin/RuuviBridge) - A data bridge between Mosquitto and InfluxDB.
 
 ...and of course Docker and Docker-compose.
 
 ## Architecture in Mermaid graph format
-
-![Preview](https://raw.githubusercontent.com/laiti/ruuvitag-grafana/main/doc/architecture.png)
 
 ```
 flowchart TD
@@ -26,6 +28,7 @@ flowchart TD
     F(Grafana) -->|Read measurement data| E
     F -->|Temperature alert via HTTPS API| G(Telegram bot)
 ```
+![Preview](https://raw.githubusercontent.com/laiti/ruuvitag-grafana/main/doc/architecture.png)
 
 ## Setup guide
 
@@ -43,9 +46,9 @@ Besides that, there's some manual work to do.
 ### Mosquitto
 
 #### Encryption
-If you wish to encrypt your traffic (highly recommended in public internet), you need to generate certificates. And deliver the client certificate to Ruuvi Gateway. In short the command is `make config` but you might want to check the Makefile for details.
+If you wish to encrypt your MQTT traffic (highly recommended in public internet), you need to generate certificates. And deliver the client certificate to Ruuvi Gateway. In short the command is `make config` but you might want to check the Makefile for details.
 
-We could use Caddy as well to encrypt the traffic but I am not sure how well that works with WebSockets.
+We possibly could use Caddy as well to encrypt the traffic but I am not sure how well that works with WebSockets.
 
 #### Users
 Mosquitto users and passwords are defined in `mosquitto/config/passwd`. Passwords are hashed. To create the file with required gateway and ruuvibridge users, simply command `make users`.
@@ -68,7 +71,6 @@ influx config create --config-name ${INFLUXDB_BUCKET} --host-url http://localhos
 influx bucket create -n ${INFLUXDB_BUCKET} --org-id ${INFLUXDB_ORGANIZATION} -r 1825d -t <token>
 ```
 
-
 #### Create grafana and ruuvibridge users:
 ```
 . ./.env
@@ -82,10 +84,6 @@ influx auth create --org ${INFLUXDB_ORGANIZATION} --user grafana --read-authoriz
 
 Configure ruuvibridge token to `ruuvibridge/config.yml` under the `influxdb_publisher`.
 
-### Ruuvi Gateway
-
-TODO
-
 ### Ruuvibridge
 
 Ruuvibridge is configured with just `ruuvibridge/config.yml`, example config is in `examples/ruuvibridge.config.yml`. This setup uses the recommended **MQTT listener** mode. As the traffic between Mosquitto, Ruuvibridge and InfluxDB happens between Docker containers, no SSL is required. You can also create a template from variables in `.env` via `Makefile` with command `make config`
@@ -96,46 +94,49 @@ Change the `username` and `password` under `mqtt_listener` to the ones you creat
 
 Enter the Ruuvi Gateway settings and proceed to page 7 (Cloud Options). Configure as below.
 
-#### 7/11 Cloud Options
+#### 7/11 Cloud Options ([screenshot](doc/ruuvi-gateway-settings-7-cloud-options.png))
 
- ✅ Use Ruuvi Cloud and/or a custom server and configure other advanced settings.
+-	✅ Use Ruuvi Cloud and/or a custom server and configure other advanced settings.
 
-[Screenshot of settings page](doc/ruuvi-gateway-settings-7-cloud-options.png)
+#### 8/11 Ruuvi Cloud ([screenshot](doc/ruuvi-gateway-settings-8-custom-server-mqtt.png))
 
-#### 8/11 Ruuvi Cloud:
-
- ✅ MQTT(S)
-    ✅ MQTT over Secure WebSocket
-    Server: wss://<MOSQUITTO_BROKER_HOSTNAME from .env>
-    Port: 8886
-    Data format
-        ✅ Don't decode, send data in raw format (default)
-    Username: <MOSQUITTO_GATEWAY_USER from .env>
-    Password: <MOSQUITTO_GATEWAY_PASSWORD from .env>
-    Topic prefix
-        ✅ Use ‘ruuvi’ on the prefix
-        ✅ Use Ruuvi Gateway's MAC address on the topic prefix
-        🟩 Use a custom topic prefix
-
-
-    ✅ Use client SSL certificate (*.pem,*.crt,*.cert,*.key)
-        <Upload `ruuvigw.crt` and `ruuvigw.key` from `mosquitto/config/certs/clients/`>
-    ✅ Use custom SSL certificate for the server (*.pem,*.crt,*.cert)
-        <Upload `mosquitto/config/certs/ca/ca.crt`>
-
-[Screenshot of settings page](doc/ruuvi-gateway-settings-8-custom-server-mqtt.png)
+- ✅ MQTT(S)
+   - ✅ MQTT over Secure WebSocket
+    - Server: wss://<MOSQUITTO_BROKER_HOSTNAME from .env>
+    - Port: 8886
+    - Data format
+    	- ✅ Don't decode, send data in raw format (default)
+    - Username: <MOSQUITTO_GATEWAY_USER from .env>
+    - Password: <MOSQUITTO_GATEWAY_PASSWORD from .env>
+    - Topic prefix
+        - ✅ Use ‘ruuvi’ on the prefix
+        - ✅ Use Ruuvi Gateway's MAC address on the topic prefix
+        - 🟩 Use a custom topic prefix
+    - ✅ Use client SSL certificate (*.pem,*.crt,*.cert,*.key)
+        - <Upload `ruuvigw.crt` and `ruuvigw.key` from `mosquitto/config/certs/clients/` here>
+    - ✅ Use custom SSL certificate for the server (*.pem,*.crt,*.cert)
+    	- <Upload `mosquitto/config/certs/ca/ca.crt` here>
 
 ### Grafana
 
-Once you've set up Grafana, you can log in and start querying Ruuvitag data if all works. As stated above, the default login is `admin/admin`. Example query for single tag with offset (usually handy with humidity measurements):
+Once you've set up Grafana, you can log in, configure InfluxDB as data source and start querying Ruuvitag data if all works. As stated above, the default login is `admin/admin`.
+
+#### Example query for single tag with offset (usually handy with humidity measurements)
 
 ```
 from(bucket: "ruuvi")
     |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-    |> filter(fn: (r) => r._measurement == "ruuvi_measurements" and r._field == "temperature" and r.name == "Sauna")
+    |> filter(fn: (r) => r._measurement == "ruuvi_measurements" and r._field == "humidity" and r.name == "Sauna")
     |> map(fn: (r) => ({r with _value: float(v: r._value) - 5.75 }))
     |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: true)
     |> yield(name: "_time")
+```
+
+#### Example query for alert
+```
+from(bucket: "ruuvi")
+    |> range(start: -5m)
+    |> filter(fn: (r) => r._measurement == "ruuvi_measurements" and r._field == "temperature" and r.name == "Sauna")
 ```
 
 Using the `r.name` requires that you've set up the `tag_names` in `ruuvibridge/config.yml` properly.
