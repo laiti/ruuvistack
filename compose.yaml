@@ -54,13 +54,13 @@ services:
     # Mosquitto runs as UID 1883 by default
     user: 1883:1883
     expose:
-      - 1883 # MQTT no-tls port for RuuviBridge
+      - 1883 # MQTT no-tls port is exposed for RuuviBridge container
     networks:
       mqtt:
         aliases:
           - mosquitto
     ports:
-      - "8886:8886"  # TLS MQTT Websocket open to world for Ruuvi Gateway
+      - "8886:8886" # TLS MQTT Websocket port is open to world for Ruuvi Gateway
     volumes:
       - ./mosquitto/config:/mosquitto/config:rw
       - /etc/localtime:/etc/localtime:ro
@@ -82,7 +82,7 @@ services:
   caddy:
     image: caddy:latest
     container_name: caddy
-    # Caddy runs as UID 0 by default, most likely because it needs to listen ports below 1024
+    # Caddy runs as UID 0 by default because it needs to listen ports below 1024
     # user: 0
     restart: unless-stopped
     ports:
