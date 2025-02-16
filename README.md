@@ -92,6 +92,39 @@ Ruuvibridge is configured with just `ruuvibridge/config.yml`, example config is 
 
 Change the `username` and `password` under `mqtt_listener` to the ones you created in Mosquitto. And configure your Ruuvitag BT addressess under `tag_names` and you should be good to go.
 
+### Ruuvi Gateway settings
+
+Enter the Ruuvi Gateway settings and proceed to page 7 (Cloud Options). Configure as below.
+
+#### 7/11 Cloud Options
+
+ ✅ Use Ruuvi Cloud and/or a custom server and configure other advanced settings.
+
+[Screenshot of settings page](doc/ruuvi-gateway-settings-7-cloud-options.png)
+
+#### 8/11 Ruuvi Cloud:
+
+ ✅ MQTT(S)
+    ✅ MQTT over Secure WebSocket
+    Server: wss://<MOSQUITTO_BROKER_HOSTNAME from .env>
+    Port: 8886
+    Data format
+        ✅ Don't decode, send data in raw format (default)
+    Username: <MOSQUITTO_GATEWAY_USER from .env>
+    Password: <MOSQUITTO_GATEWAY_PASSWORD from .env>
+    Topic prefix
+        ✅ Use ‘ruuvi’ on the prefix
+        ✅ Use Ruuvi Gateway's MAC address on the topic prefix
+        🟩 Use a custom topic prefix
+
+
+    ✅ Use client SSL certificate (*.pem,*.crt,*.cert,*.key)
+        <Upload `ruuvigw.crt` and `ruuvigw.key` from `mosquitto/config/certs/clients/`>
+    ✅ Use custom SSL certificate for the server (*.pem,*.crt,*.cert)
+        <Upload `mosquitto/config/certs/ca/ca.crt`>
+
+[Screenshot of settings page](doc/ruuvi-gateway-settings-8-custom-server-mqtt.png)
+
 ### Grafana
 
 Once you've set up Grafana, you can log in and start querying Ruuvitag data if all works. As stated above, the default login is `admin/admin`. Example query for single tag with offset (usually handy with humidity measurements):
@@ -107,8 +140,8 @@ from(bucket: "ruuvi")
 
 Using the `r.name` requires that you've set up the `tag_names` in `ruuvibridge/config.yml` properly.
 
-### Telegram
-Grafana supports alert messages via Telegram out of the box. You can find some alert templates in the `doc/` directory.
+#### Alerts as Telegram messages
+Grafana supports alert messages via Telegram out of the box. You can find some alert templates in the `doc/` directory. Other messaging platforms like Slack are supported as well.
 
 ## Sources
 
