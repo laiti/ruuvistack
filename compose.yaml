@@ -2,7 +2,7 @@ services:
   influxdb2:
     image: influxdb:2
     container_name: influxdb2
-    # InfluxDB runs by default with UID 1000, it is my user and I don't want that
+    # InfluxDB runs by default with UID 1000, however changing it leads to directory permission issues
     #user: 1338:1338
     expose:
     - 8086
@@ -17,9 +17,10 @@ services:
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_ADMIN_TOKEN}
       DOCKER_INFLUXDB_INIT_ORG: ${INFLUXDB_ORGANIZATION}
       DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB_BUCKET}
-    # Enable this if you need to connect to InfluxDB from the host.
-    #ports:
-    #  - "127.0.0.1:8086:8086"
+    # Exposing InfluxDB to host is not required for the system to function but it is useful for running
+    # commands from host (like creating buckets, users, etc.)
+    ports:
+      - "127.0.0.1:8086:8086"
     volumes:
       - influxdb2-data:/var/lib/influxdb2:rw
       - influxdb2-config:/etc/influxdb2:rw
