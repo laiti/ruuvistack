@@ -1,0 +1,20 @@
+{{ define "telegram_msg" }}
+  {{- if gt (len .Alerts.Firing) 0 }}
+🔥 {{ len .Alerts.Firing }} alert(s) firing:
+    {{- range .Alerts.Firing }}
+      Name: {{ .Labels.alertname }} 
+      Reason: {{ .Annotations.summary }}
+      Value: {{ printf "%.1f" .Values.B }}
+      URL: {{ .PanelURL }}
+    {{- end }}
+  {{- end }}
+  {{- if gt (len .Alerts.Resolved) 0 }}
+✅ {{ len .Alerts.Resolved }} alert(s) resolved:
+    {{- range .Alerts.Resolved }}
+      Name: {{ .Labels.alertname }} 
+      Reason: {{ .Annotations.summary }}
+      Value: {{ printf "%.1f" .Values.B }}
+      URL: {{ .PanelURL }}
+    {{- end }}
+  {{- end }}
+{{- end }}
