@@ -142,8 +142,7 @@ from(bucket: "ruuvi")
 Using the `r.name` requires that you've set up the `tag_names` in `ruuvibridge/config.yml` properly.
 
 #### Alerts as Telegram messages
-Grafana supports alert messages via Telegram out of the box. You can find some alert templates in the `doc/` directory. Other messaging platforms like Slack are supported as well.
-
+Grafana supports alert messages via Telegram out of the box. You can find [example alert template](doc/telegram-alert.template) in the `doc/` directory
 ## Sources
 
 - https://github.com/mchestr/Secure-MQTT-Docker
