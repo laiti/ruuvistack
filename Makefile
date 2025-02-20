@@ -11,6 +11,8 @@ CLIENT_CERTS:=\
 include $(PWD)/.env
 
 ### GENERAL COMMANDS
+.PHONY all
+all: certs config docker
 
 .PHONY: certs
 certs: $(CERTS) $(CLIENT_CERTS)
@@ -22,9 +24,14 @@ distclean:
 	rm -f $(CERT_DIR)/ca/*.crt $(CERT_DIR)/ca/*.key $(CERT_DIR)/ca/*.srl
 	rm -f $(CERT_DIR)/broker/*.crt $(CERT_DIR)/broker/*.key $(CERT_DIR)/broker/*.csr
 	rm -f $(CERT_DIR)/clients/*.crt $(CERT_DIR)/clients/*.key $(CERT_DIR)/clients/*.csr
+	rm -f mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
 
 .PHONY: config
 config: mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
+
+.PHONY: docker
+docker:
+	docker-compose up -d
 
 ### CONFIGURATIONS
 
