@@ -50,7 +50,8 @@ mosquitto/config/passwd:
 
 ruuvibridge/config.yml:
 	cat examples/ruuvibridge.config.yml|sed "s/MOSQUITTO_RUUVIBRIDGE_PASSWORD/${MOSQUITTO_RUUVIBRIDGE_PASSWORD}/" > $@
-	chmod 0600 $@
+	chown root:1337 $@
+	chmod 0640 $@
 
 ~/.influxdbv2/configs:
 	install -m 0700 -d ~/.influxdbv2/
