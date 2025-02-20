@@ -60,7 +60,7 @@ influxdb_publisher:
   # Minimum interval for measurements to publish per tag. InfluxDB handles frequent updates very efficiently due to delta compression so the default is no limit
   minimum_interval: 0s
   # URL for InfluxDB, including scheme, hostname and port
-  url: http://localhost:8086
+  url: http://influxdb:8086
   # For InfluxDB 1.8 the auth_token is username and password in format "username:password"
   auth_token: INFLUXDB_RUUVIBRIDGE_TOKEN
   # This is ignored for InfluxDB 1.8
@@ -107,7 +107,7 @@ mqtt_publisher:
   # Minimum interval for measurements to publish per tag. Accepts values in go duration format ( https://pkg.go.dev/time#ParseDuration ), for example 1m30s
   minimum_interval: 30s
   # MQTT broker url, including scheme (tcp, ssl or ws), hostname or IP address, and port
-  broker_url: tcp://ip.or.hostname:1883
+  broker_url: tcp://mosquitto:1883
   # Client ID, required for persistent sessions and has to be unique on the MQTT server
   client_id: RuuviBridgePublisher
   username: ruuvibridge
