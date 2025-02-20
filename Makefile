@@ -29,15 +29,10 @@ distclean:
 .PHONY: config
 config: mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 204e69f (Add docker and all make options and removal of config files to distclean)
 .PHONY: docker
 docker:
 	docker-compose up -d
 
-<<<<<<< HEAD
 .PHONY: docker-update
 docker-update:
 	docker-compose pull
@@ -45,10 +40,6 @@ docker-update:
 	docker image prune -f
 	df -h
 
-=======
->>>>>>> f2ad12a (Remove .env)
-=======
->>>>>>> 204e69f (Add docker and all make options and removal of config files to distclean)
 ### CONFIGURATIONS
 
 # For creating Mosquitto users we need to access the mosquitto_passwd tool which is only inside the container.
