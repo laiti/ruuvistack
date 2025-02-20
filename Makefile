@@ -27,7 +27,8 @@ distclean:
 	rm -f mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
 
 .PHONY: config
-config: mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
+config:
+	mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
 
 .PHONY: docker
 docker:
