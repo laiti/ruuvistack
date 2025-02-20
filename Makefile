@@ -27,13 +27,15 @@ distclean:
 	rm -f mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
 
 .PHONY: config
-config: mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
+config:
+	mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
 
 .PHONY: docker
 docker:
 	docker-compose up -d
 
 .PHONY: docker-update
+docker-update:
 	docker-compose pull
 	docker-compose up --force-recreate --build -d
 	docker image prune -f
