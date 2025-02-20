@@ -51,7 +51,7 @@ mosquitto/config/passwd:
 	docker run -it --rm -v $(shell pwd)/mosquitto/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b $@ $(MOSQUITTO_RUUVIBRIDGE_USER) $(MOSQUITTO_RUUVIBRIDGE_PASSWORD)
 
 ruuvibridge/config.yml:
-	cat examples/ruuvibridge.config.yml|sed "s/MOSQUITTO_RUUVIBRIDGE_PASSWORD/${MOSQUITTO_RUUVIBRIDGE_PASSWORD}/" > $@
+	cat examples/ruuvibridge.config.yml|sed "s/MOSQUITTO_RUUVIBRIDGE_PASSWORD/${MOSQUITTO_RUUVIBRIDGE_PASSWORD}/;s/MOSQUITTO_RUUVIBRIDGE_USER/${MOSQUITTO_RUUVIBRIDGE_USER};s/INFLUXDB_ORGANIZATION/${INFLUXDB_ORGANIZATION}/" > $@
 	chown root:1337 $@
 	chmod 0640 $@
 
