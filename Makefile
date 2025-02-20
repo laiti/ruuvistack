@@ -33,6 +33,12 @@ config: mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
 docker:
 	docker-compose up -d
 
+.PHONY: docker-update
+	docker-compose pull
+	docker-compose up --force-recreate --build -d
+	docker image prune -f
+	df -h
+
 ### CONFIGURATIONS
 
 # For creating Mosquitto users we need to access the mosquitto_passwd tool which is only inside the container.
