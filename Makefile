@@ -10,6 +10,10 @@ CLIENT_CERTS:=\
 
 include $(PWD)/.env
 
+### GENERAL COMMANDS
+.PHONY: all
+all: certs config docker
+
 .PHONY: certs
 certs: $(CERTS) $(CLIENT_CERTS)
 
@@ -20,9 +24,24 @@ distclean:
 	rm -f $(CERT_DIR)/ca/*.crt $(CERT_DIR)/ca/*.key $(CERT_DIR)/ca/*.srl
 	rm -f $(CERT_DIR)/broker/*.crt $(CERT_DIR)/broker/*.key $(CERT_DIR)/broker/*.csr
 	rm -f $(CERT_DIR)/clients/*.crt $(CERT_DIR)/clients/*.key $(CERT_DIR)/clients/*.csr
+	rm -f mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
 
 .PHONY: config
-config: mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
+config:
+	mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
+
+.PHONY: docker
+docker:
+	docker-compose up -d
+
+.PHONY: docker-update
+docker-update:
+	docker-compose pull
+	docker-compose up --force-recreate --build -d
+	docker image prune -f
+	df -h
+
+### CONFIGURATIONS
 
 # For creating Mosquitto users we need to access the mosquitto_passwd tool which is only inside the container.
 mosquitto/config/passwd:
@@ -32,13 +51,16 @@ mosquitto/config/passwd:
 	docker run -it --rm -v $(shell pwd)/mosquitto/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b $@ $(MOSQUITTO_RUUVIBRIDGE_USER) $(MOSQUITTO_RUUVIBRIDGE_PASSWORD)
 
 ruuvibridge/config.yml:
-	cat examples/ruuvibridge.config.yml|sed "s/MOSQUITTO_RUUVIBRIDGE_PASSWORD/${MOSQUITTO_RUUVIBRIDGE_PASSWORD}/" > $@
-	chmod 0600 $@
+	cat examples/ruuvibridge.config.yml|sed "s/MOSQUITTO_RUUVIBRIDGE_PASSWORD/${MOSQUITTO_RUUVIBRIDGE_PASSWORD}/;s/MOSQUITTO_RUUVIBRIDGE_USER/${MOSQUITTO_RUUVIBRIDGE_USER}/;s/INFLUXDB_ORGANIZATION/${INFLUXDB_ORGANIZATION}/" > $@
+	chown root:1337 $@
+	chmod 0640 $@
 
 ~/.influxdbv2/configs:
 	install -m 0700 -d ~/.influxdbv2/
 	cat examples/influxdbv2-config|sed "s/INFLUXDB_TOKEN/${INFLUXDB_ADMIN_TOKEN}/" > $@
 	chmod 0600 $@
+
+### CERTIFICATES
 
 # ROOT CA KEY
 # To remove password protetction, remove '-des3'

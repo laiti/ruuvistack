@@ -15,7 +15,7 @@ mqtt_listener:
   broker_url: tcp://mosquitto:1883
   # Client ID, required for persistent sessions and has to be unique on the MQTT server
   client_id: RuuviBridgeListener
-  username: ruuvibridge
+  username: MOSQUITTO_RUUVIBRIDGE_USER
   # Replace this with the password from .env file
   password: MOSQUITTO_RUUVIBRIDGE_PASSWORD
   # Topic prefix to subscribe to, expecting RuuviTag measurements to be published as <topic_prefix>/<mac>
@@ -56,15 +56,15 @@ processing:
 # Supports both InfluxDB 1.8 and 2.x
 influxdb_publisher:
   # Flag to enable or disable publishing the processed data to InfluxDB
-  enabled: false
+  enabled: true
   # Minimum interval for measurements to publish per tag. InfluxDB handles frequent updates very efficiently due to delta compression so the default is no limit
   minimum_interval: 0s
   # URL for InfluxDB, including scheme, hostname and port
-  url: http://localhost:8086
+  url: http://influxdb:8086
   # For InfluxDB 1.8 the auth_token is username and password in format "username:password"
   auth_token: INFLUXDB_RUUVIBRIDGE_TOKEN
   # This is ignored for InfluxDB 1.8
-  org: ""
+  org: "INFLUXDB_ORGANIZATION"
   # For InfluxDB 1.8 the bucket is the database name, with optional retention policy in format "database/retentionpolicy"
   bucket: ruuvi
   # Measurement name to use
@@ -103,15 +103,15 @@ prometheus:
 # Publish the parsed and processed data back to MQTT. Can be the same server or a different one.
 mqtt_publisher:
   # Flag to enable or disable publishing the processed data to a MQTT server
-  enabled: false
+  enabled: true
   # Minimum interval for measurements to publish per tag. Accepts values in go duration format ( https://pkg.go.dev/time#ParseDuration ), for example 1m30s
   minimum_interval: 30s
   # MQTT broker url, including scheme (tcp, ssl or ws), hostname or IP address, and port
-  broker_url: tcp://ip.or.hostname:1883
+  broker_url: tcp://mosquitto:1883
   # Client ID, required for persistent sessions and has to be unique on the MQTT server
   client_id: RuuviBridgePublisher
-  username: ruuvibridge
-  password: ruuvipassword
+  username: MOSQUITTO_RUUVIBRIDGE_USER
+  password: MOSQUITTO_RUUVIBRIDGE_PASSWORD
   # Topic prefix where to publish, in format <topic_prefix>/<mac>
   # If you use the same server for a source, be sure to use a differnet topic prefix to avoid conflicts!
   topic_prefix: ruuvitag
@@ -121,7 +121,7 @@ mqtt_publisher:
   publish_raw: false
   # Topic where to publish LWT "status messages" on connect/disconnect. Empty means disabled.
   # Note that the mqtt_listener and mqtt_publisher have their own distinct connections and you should not use the same lwt topic for both.
-  lwt_topic: ""
+  lwt_topic: "bridge_publisher"
   # Payload that will be published to lwt_topic when RuuviBridge connects
   lwt_online_payload: '{"state":"online"}'
   # Payload that will be published to lwt_topic when RuuviBridge disconnects
