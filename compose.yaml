@@ -97,10 +97,6 @@ services:
       #- /etc/localtime:/etc/localtime:ro
       #- /etc/timezone:/etc/timezone:ro
     networks:
-<<<<<<< HEAD
-=======
-      mqtt:
->>>>>>> 74377aa (Update comments about networking and make Grafana networking syntax same as others)
       grafana:
     environment:
       GF_SERVER_DOMAIN: ${GRAFANA_HOSTNAME}
