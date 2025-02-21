@@ -97,7 +97,6 @@ services:
       #- /etc/localtime:/etc/localtime:ro
       #- /etc/timezone:/etc/timezone:ro
     networks:
-      mqtt:
       grafana:
     environment:
       GF_SERVER_DOMAIN: ${GRAFANA_HOSTNAME}
