@@ -5,7 +5,7 @@ services:
     # InfluxDB runs by default with UID 1000, however changing it leads to directory permission issues
     #user: 1338:1338
     expose:
-    - 8086
+    - 8086 # RuuviBridge and Grafana connect to InfluxDB service via this port and influxdb network
     networks:
       influxdb:
         aliases:
@@ -34,7 +34,7 @@ services:
     user: 472:472
     restart: unless-stopped
     expose:
-      - 3000
+      - 3000 # Caddy proxies Grafana via this port using grafana network
     networks:
       grafana:
         aliases:
@@ -54,7 +54,7 @@ services:
     # Mosquitto runs as UID 1883 by default
     user: 1883:1883
     expose:
-      - 1883 # MQTT no-tls port is exposed only for RuuviBridge container
+      - 1883 # MQTT no-tls port is exposed only for RuuviBridge container via mqtt network
     networks:
       mqtt:
         aliases:
