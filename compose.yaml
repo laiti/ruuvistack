@@ -54,7 +54,7 @@ services:
     # Mosquitto runs as UID 1883 by default
     user: 1883:1883
     expose:
-      - 1883 # MQTT no-tls port is exposed for RuuviBridge container
+      - 1883 # MQTT no-tls port is exposed only for RuuviBridge container
     networks:
       mqtt:
         aliases:
@@ -97,14 +97,17 @@ services:
       #- /etc/localtime:/etc/localtime:ro
       #- /etc/timezone:/etc/timezone:ro
     networks:
-      - mqtt
-      - grafana
+      mqtt:
+      grafana:
     environment:
       GF_SERVER_DOMAIN: ${GRAFANA_HOSTNAME}
 
 networks:
+  # Network for RuuviBridge to subscribe to Mosquitto broker
   mqtt:
+  # Network for containers requiring InfluxDB access (RuuviBridge, Grafana)
   influxdb:
+  # Caddy exposes Grafana via HTTP through this network
   grafana:
 
 volumes:
