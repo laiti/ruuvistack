@@ -93,8 +93,9 @@ services:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
       - ./caddy/data:/data/caddy
       - ./caddy/config:/config/caddy
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
+      # FIXME: This might somehow break the initial setup of Letsencrypt
+      #- /etc/localtime:/etc/localtime:ro
+      #- /etc/timezone:/etc/timezone:ro
     networks:
       - mqtt
       - grafana
