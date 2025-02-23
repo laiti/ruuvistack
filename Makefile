@@ -65,7 +65,7 @@ ruuvibridge/config.yml:
 # ROOT CA KEY
 # To remove password protetction, remove '-des3'
 mosquitto/config/certs/ca/ca.key:
-	openssl genrsa -des3 -out $@ 4096
+	openssl genrsa $(MOSQUITTO_ROOT_CA_KEY_OPTIONS) -out $@ 4096
 
 # ROOT CA CERTIFICATE AND SELF SIGN
 mosquitto/config/certs/ca/ca.crt: mosquitto/config/certs/ca/ca.key
