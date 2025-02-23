@@ -11,14 +11,14 @@ CLIENT_CERTS:=\
 include $(PWD)/.env
 
 ### GENERAL COMMANDS
-.PHONY: all
+.PHONY: all # Default rule
 all: certs config docker
 
 .PHONY: certs
 certs: $(CERTS) $(CLIENT_CERTS)
 
 # This cleans everything, use with caution. Ensure that CERT_DIR is set.
-.PHONY: distclean 
+.PHONY: clean
 distclean:
 	rm -f *~
 	rm -f $(CERT_DIR)/ca/*.crt $(CERT_DIR)/ca/*.key $(CERT_DIR)/ca/*.srl
@@ -27,8 +27,7 @@ distclean:
 	rm -f mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
 
 .PHONY: config
-config:
-	mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
+config: mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
 
 .PHONY: docker
 docker:
@@ -65,7 +64,7 @@ ruuvibridge/config.yml:
 # ROOT CA KEY
 # To remove password protetction, remove '-des3'
 mosquitto/config/certs/ca/ca.key:
-	openssl genrsa -des3 -out $@ 4096
+	openssl genrsa $(MOSQUITTO_ROOT_CA_KEY_OPTIONS) -out $@ 4096
 
 # ROOT CA CERTIFICATE AND SELF SIGN
 mosquitto/config/certs/ca/ca.crt: mosquitto/config/certs/ca/ca.key
