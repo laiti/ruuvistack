@@ -18,7 +18,7 @@ all: certs config docker
 certs: $(CERTS) $(CLIENT_CERTS)
 
 # This cleans everything, use with caution. Ensure that CERT_DIR is set.
-.PHONY: distclean 
+.PHONY: clean
 distclean:
 	rm -f *~
 	rm -f $(CERT_DIR)/ca/*.crt $(CERT_DIR)/ca/*.key $(CERT_DIR)/ca/*.srl
