@@ -11,7 +11,7 @@ CLIENT_CERTS:=\
 include $(PWD)/.env
 
 ### GENERAL COMMANDS
-.PHONY: all
+.PHONY: all # Default rule
 all: certs config docker
 
 .PHONY: certs
