@@ -1,4 +1,4 @@
-# Ruuvi-docker
+# Ruuvistack
 Docker setup to set up a complete Ruuvitag monitoring stack with alerts. Aims to be highly configurable in a single place (.env file.)
 
 ## Components
