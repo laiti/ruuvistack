@@ -10,8 +10,8 @@ datasources:
   isDefault: true
   jsonData:
     version: Flux
-    organization: ${INFLUXDB_ORG}
-    defaultBucket: ${INFLUXDB_BUCKET}
+    organization: INFLUXDB_ORGAZNIZATION
+    defaultBucket: INFLUXDB_BUCKET
     httpMode: POST
     tlsSkipVerify: false
     tlsAuth: false
@@ -19,4 +19,4 @@ datasources:
     minTimeInterval: 10s
     maxSeries: 1000
   secureJsonData:
-    token: ${INFLUXDB_GRAFANA_USER_TOKEN}
+    token: INFLUXDB_GRAFANA_USER_TOKEN
