@@ -19,7 +19,7 @@ MOSQUITTO_RUUVIBRIDGE_PASSWORD=RuuvibridgeMosquittoPassword
 
 # Variables for mosquitto certificate
 MOSQUITTO_BROKER_HOSTNAME=mqtt.mydomain.tld
-MOSQUITTO_CERT_ORG=${INFLUXDB_ORGANIZAITON}
+MOSQUITTO_CERT_ORG=${INFLUXDB_ORGANIZATION}
 MOSQUITTO_CERT_COMMON_STRING=/C=FI/ST=MyState/L=MyCity/O=${MOSQUITTO_CERT_ORG}
 
 # Common Name (CN) for the root CA must be different than for broker and client
