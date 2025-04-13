@@ -44,6 +44,8 @@ services:
       - grafana-storage:/var/lib/grafana:rw
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+
     environment:
       GF_SERVER_DOMAIN: ${GRAFANA_HOSTNAME}
       GF_SERVER_ROOT_URL: https://${GRAFANA_HOSTNAME}/

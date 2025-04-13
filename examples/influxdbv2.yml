@@ -1,0 +1,22 @@
+apiVersion: 1
+datasources:
+- name: ruuvi
+  type: influxdb
+  access: proxy
+  orgId: 1
+  url: http://influxdb:8086
+  timeout: 10s
+  basicAuth: false
+  isDefault: true
+  jsonData:
+    version: Flux
+    organization: INFLUXDB_ORGANIZATION
+    defaultBucket: INFLUXDB_BUCKET
+    httpMode: POST
+    tlsSkipVerify: false
+    tlsAuth: false
+    tlsAuthWithCACert: false
+    minTimeInterval: 10s
+    maxSeries: 1000
+  secureJsonData:
+    token: INFLUXDB_GRAFANA_USER_TOKEN

@@ -27,7 +27,7 @@ distclean:
 	rm -f mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
 
 .PHONY: config
-config: mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs
+config: mosquitto/config/passwd ruuvibridge/config.yml ~/.influxdbv2/configs grafana/provisioning/datasources/influxdbv2.yml
 
 .PHONY: docker
 docker:
@@ -58,6 +58,12 @@ ruuvibridge/config.yml:
 	install -m 0700 -d ~/.influxdbv2/
 	cat examples/influxdbv2-config|sed "s/INFLUXDB_TOKEN/${INFLUXDB_ADMIN_TOKEN}/" > $@
 	chmod 0600 $@
+
+grafana/provisioning/datasources/influxdbv2.yml:
+	install -m 0644 -d grafana/provisioning/datasources/
+	cat examples/influxdbv2.yml|sed "s/INFLUXDB_ORGANIZATION/${INFLUXDB_ORGANIZATION}/;s/INFLUXDB_BUCKET/${INFLUXDB_BUCKET}/;s/INFLUXDB_GRAFANA_USER_TOKEN/${INFLUXDB_GRAFANA_USER_TOKEN}/" > $@
+	chown root:472 grafana/provisioning/datasources/influxdbv2.yml
+	chmod 0640 grafana/provisioning/datasources/influxdbv2.yml
 
 ### CERTIFICATES
 
