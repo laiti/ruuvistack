@@ -41,12 +41,12 @@ flowchart TD
 To bring the Docker containers up:
 1) Populate `.env` file (example available at `examples/` dir)
 2) Create Mosquitto certs with `make certs` and users with `make users`
-3) Create Ruuvibridge config, InfluxDB2 client config and Mosquitto passwd file with `make config`
+3) Create Ruuvibridge config, InfluxDB client config and Mosquitto passwd file with `make config`
 4) Run `docker-compose up` in the root directory.
 
-NOTE: This launches Grafana in the public net with `admin/admin` default credentials to the hostname you set in `.env`. Be sure to change the password before anyone else does it. If they do not work, refer to the [grafana-oss docker image documentation](https://hub.docker.com/r/grafana/grafana-oss).
+**NOTE**: This launches Grafana in the public net with `admin/admin` default credentials to the hostname you set in `.env`. Be sure to change the password before anyone else does it. If those credentials do not work, refer to the [grafana-oss docker image documentation](https://hub.docker.com/r/grafana/grafana-oss).
 
-Besides that, there's some manual work to do.
+Besides this, there's some manual work to do.
 
 ### Mosquitto
 
