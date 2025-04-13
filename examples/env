@@ -25,7 +25,7 @@ MOSQUITTO_CERT_COMMON_STRING=/C=FI/ST=MyState/L=MyCity/O=${MOSQUITTO_CERT_ORG}
 # Common Name (CN) for the root CA must be different than for broker and client
 # Set this to "-des3" if you wish to have password protected CA certificate key. Note
 # that it will prompt the PW when running make config rule.
-MOSQUITTO_ROOT_CA_KEY_OPTIONS=""
+MOSQUITTO_ROOT_CA_KEY_OPTIONS=
 MOSQUITTO_ROOT_CA_SUBJECT=${MOSQUITTO_CERT_COMMON_STRING}/OU=CA/CN=${MOSQUITTO_CERT_ORG}
 MOSQUITTO_BROKER_SUBJECT=${MOSQUITTO_CERT_COMMON_STRING}/OU=Server/CN=${MOSQUITTO_BROKER_HOSTNAME}
 MOSQUITTO_CLIENT_SUBJECT=${MOSQUITTO_CERT_COMMON_STRING}/OU=Client/CN=${MOSQUITTO_BROKER_HOSTNAME}
