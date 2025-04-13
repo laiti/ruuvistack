@@ -10,7 +10,7 @@ datasources:
   isDefault: true
   jsonData:
     version: Flux
-    organization: INFLUXDB_ORGAZNIZATION
+    organization: INFLUXDB_ORGANIZATION
     defaultBucket: INFLUXDB_BUCKET
     httpMode: POST
     tlsSkipVerify: false
