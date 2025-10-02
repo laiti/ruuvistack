@@ -64,6 +64,7 @@ grafana/provisioning/datasources/influxdbv2.yml:
 	cat examples/influxdbv2.yml|sed "s/INFLUXDB_ORGANIZATION/${INFLUXDB_ORGANIZATION}/;s/INFLUXDB_BUCKET/${INFLUXDB_BUCKET}/;s/INFLUXDB_GRAFANA_USER_TOKEN/${INFLUXDB_GRAFANA_USER_TOKEN}/" > $@
 	chown root:472 grafana/provisioning/datasources/influxdbv2.yml
 	chmod 0640 grafana/provisioning/datasources/influxdbv2.yml
+	chmod 0750 grafana/provisioning/datasources
 
 ### CERTIFICATES
 
