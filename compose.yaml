@@ -25,7 +25,7 @@ services:
       - influxdb2-data:/var/lib/influxdb2:rw
       - influxdb2-config:/etc/influxdb2:rw
       - /etc/localtime:/etc/localtime:ro # To ensure that host and container have the same time
-      - /etc/timezone:/etc/timezone:ro
+      #- /etc/timezone:/etc/timezone:ro # This breaks with latest docker and images
 
   grafana:
     image: grafana/grafana-oss
