@@ -95,4 +95,4 @@ mosquitto/config/certs/clients/ruuvigw:
 	echo "Creating Client: $@" ; \
 	openssl genrsa -out $@.key ; \
 	openssl req -new -key $@.key -out $@.csr -subj "$(MOSQUITTO_CLIENT_SUBJECT)" || openssl req -in $@.csr -noout -text ; \
-	openssl x509 -req -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -in $@.csr -out $@.crt || openssl x509 -in $@.crt -text -noout
+	openssl x509 -req -CA mosquitto/config/certs/ca/ca.crt -CAkey mosquitto/config/certs/ca/ca.key -CAcreateserial -in $@.csr -out $@.crt -days 1850 || openssl x509 -in $@.crt -text -noout
